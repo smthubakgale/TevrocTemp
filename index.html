@@ -1,40 +1,1841 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>SignML Motion Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#0a0a0a',
+                        card: '#141414',
+                        primary: '#8b5cf6',
+                        accent: '#ec4899',
+                        border: 'rgba(255, 255, 255, 0.05)',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1025 50%, #0a0a0a 100%);
+            min-height: 100vh;
+        }
+        .glass-panel {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .tab-active {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+        }
+        .tab-accent-active {
+            background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+            box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3);
+        }
+        .glow-primary {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .recording-pulse {
+            animation: recording-pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes recording-pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body class="text-gray-200 font-sans antialiased">
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="h-20 border-b border-white/5 bg-black/40 backdrop-blur-md sticky top-0 z-50 flex items-center px-8">
+            <div class="flex items-center gap-3 text-primary">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-pink-500 flex items-center justify-center shadow-lg shadow-violet-500/20">
+                    <i data-lucide="person-standing" class="w-6 h-6 text-white"></i>
+                </div>
+                <h1 class="text-2xl font-bold tracking-tight text-white">SignML Motion Studio</h1>
+            </div>
+            <div class="ml-auto flex items-center gap-4">
+                <div class="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm font-mono text-gray-400 flex items-center gap-2">
+                    <span id="statusDot" class="w-2 h-2 rounded-full bg-gray-500"></span>
+                    <span id="cameraStatus">Camera Off</span>
+                </div>
+            </div>
+        </header>
+        <!-- Main Content -->
+        <main class="flex-1 max-w-[1600px] w-full mx-auto p-6 lg:p-8">
+            <!-- Tab Navigation -->
+            <div class="h-12 items-center justify-center bg-black/20 p-1 rounded-2xl inline-flex mb-8 border border-white/5">
+                <button onclick="switchTab('record')" id="tab-record" class="tab-active inline-flex items-center justify-center whitespace-nowrap text-sm rounded-xl px-8 py-2.5 font-medium transition-all text-white">
+                    Record
+                </button>
+                <button onclick="switchTab('dataset')" id="tab-dataset" class="inline-flex items-center justify-center whitespace-nowrap text-sm rounded-xl px-8 py-2.5 font-medium transition-all text-gray-400 hover:text-white">
+                    Dataset
+                </button>
+                <button onclick="switchTab('train')" id="tab-train" class="inline-flex items-center justify-center whitespace-nowrap text-sm rounded-xl px-8 py-2.5 font-medium transition-all text-gray-400 hover:text-white">
+                    Train
+                </button>
+                <button onclick="switchTab('predict')" id="tab-predict" class="inline-flex items-center justify-center whitespace-nowrap text-sm rounded-xl px-8 py-2.5 font-medium transition-all text-gray-400 hover:text-white">
+                    Predict
+                </button>
+            </div>
+            <!-- Record Tab -->
+            <div id="content-record" class="fade-in">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2">
+                        <div class="relative rounded-3xl p-1 transition-all duration-300 bg-transparent">
+                            <div class="relative rounded-2xl overflow-hidden bg-black/50 aspect-video shadow-2xl border border-white/10 group">
+                                <video id="video" autoplay playsinline class="w-full h-full object-cover" style="transform: scaleX(-1);"></video>
+                                <canvas id="outputCanvas" class="absolute inset-0 w-full h-full object-cover pointer-events-none z-10 transform scale-x-[-1]"></canvas>
+                                <div class="absolute top-4 left-4 z-20 flex gap-2">
+                                    <div class="px-3 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-xs font-mono text-white flex items-center gap-2">
+                                        <span id="visionDot" class="w-2 h-2 rounded-full bg-gray-500"></span>
+                                        <span id="visionStatus">VISION INACTIVE</span>
+                                    </div>
+                                </div>
+                                <div id="recordingOverlay" class="hidden absolute inset-0 bg-red-500/20 backdrop-blur-sm z-30 flex items-center justify-center">
+                                    <div class="text-center">
+                                        <div class="w-20 h-20 rounded-full bg-red-500 recording-pulse flex items-center justify-center mb-4">
+                                            <i data-lucide="video" class="w-8 h-8 text-white"></i>
+                                        </div>
+                                        <p class="text-4xl font-bold text-white mb-2" id="countdown">3</p>
+                                        <p class="text-sm text-white/80">Recording...</p>
+                                    </div>
+                                </div>
+                                <div id="cameraPlaceholder" class="absolute inset-0 flex items-center justify-center bg-slate-900/90 z-20">
+                                    <div class="text-center text-gray-400">
+                                        <i data-lucide="video-off" class="w-12 h-12 mx-auto mb-3 opacity-50"></i>
+                                        <p class="text-sm font-medium mb-1">Camera inactive</p>
+                                        <button onclick="toggleCamera()" class="mt-3 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg text-sm transition">
+                                            Start Camera
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-6">
+                        <div class="glass-panel p-6 rounded-2xl">
+                            <h3 class="text-xl font-bold mb-2 text-white">Record Sample</h3>
+                            <p class="text-gray-400 text-sm mb-6">Enter the word you want to sign, position your body, and press record. The capture lasts for 2.5 seconds.</p>
+                            <div class="space-y-4">
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium text-gray-300">Label / Word</label>
+                                    <input id="labelInput" type="text" class="w-full rounded-xl border border-white/10 bg-black/20 text-white py-3 px-4 text-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent placeholder-gray-500" placeholder="e.g. hello, thanks, yes...">
+                                </div>
+                                <button onclick="startRecording()" id="recordBtn" class="w-full h-14 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white font-bold text-lg transition-all flex items-center justify-center gap-2 shadow-lg shadow-violet-600/20 disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <i data-lucide="video" class="w-5 h-5"></i>
+                                    Start Recording
+                                </button>
+                            </div>
+                        </div>
+                        <div class="glass-panel p-6 rounded-2xl bg-gradient-to-br from-violet-500/10 to-pink-500/5 border-violet-500/20">
+                            <div class="flex items-start gap-3">
+                                <i data-lucide="alert-circle" class="w-5 h-5 text-violet-400 mt-0.5"></i>
+                                <div>
+                                    <h4 class="font-semibold text-sm mb-1 text-white">Recording Tips</h4>
+                                    <ul class="text-xs text-gray-400 space-y-2 list-disc pl-4">
+                                        <li>Make sure your whole body is well lit and clearly visible.</li>
+                                        <li>Start the gesture immediately after clicking record.</li>
+                                        <li>Record at least 10-15 samples per word for good accuracy.</li>
+                                        <li>Vary your position slightly between samples.</li>
+                                        <li>Keep at least 2 meters distance from camera for full body capture.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Dataset Tab -->
+            <div id="content-dataset" class="hidden fade-in">
+                <div class="glass-panel rounded-2xl p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-semibold text-white flex items-center gap-2">
+                            <i data-lucide="database" class="w-5 h-5 text-violet-400"></i>
+                            Dataset (<span id="totalSamples">0</span> samples)
+                        </h3>
+                        <div class="flex gap-2">
+                            <button onclick="importExcel()" class="px-4 py-2 text-sm glass-card hover:bg-white/5 text-gray-300 rounded-xl transition flex items-center gap-2">
+                                <i data-lucide="upload" class="w-4 h-4"></i>
+                                Import Excel
+                            </button>
+                            <button onclick="exportExcel()" class="px-4 py-2 text-sm glass-card hover:bg-white/5 text-gray-300 rounded-xl transition flex items-center gap-2">
+                                <i data-lucide="download" class="w-4 h-4"></i>
+                                Export Excel
+                            </button>
+                            <button onclick="clearDataset()" class="px-4 py-2 text-sm bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-xl transition flex items-center gap-2">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                Clear All
+                            </button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto custom-scrollbar rounded-xl border border-white/5">
+                        <table class="w-full text-left">
+                            <thead class="text-xs text-gray-400 uppercase bg-white/5">
+                                <tr>
+                                    <th class="px-4 py-3 font-medium">Word</th>
+                                    <th class="px-4 py-3 font-medium">Samples</th>
+                                    <th class="px-4 py-3 font-medium">Preview</th>
+                                    <th class="px-4 py-3 font-medium text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="datasetTable" class="text-sm">
+                                <tr class="border-t border-white/5">
+                                    <td colspan="4" class="px-4 py-8 text-center text-gray-500">
+                                        No samples recorded yet
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- Train Tab -->
+            <div id="content-train" class="hidden fade-in">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="glass-panel rounded-2xl p-6">
+                        <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                            <i data-lucide="brain-circuit" class="w-5 h-5 text-violet-400"></i>
+                            Training Configuration
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-sm text-gray-400 mb-1 block">Epochs</label>
+                                    <input type="number" id="epochsInput" value="50" class="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-violet-500">
+                                </div>
+                                <div>
+                                    <label class="text-sm text-gray-400 mb-1 block">Learning Rate</label>
+                                    <input type="number" id="learningRateInput" value="0.001" step="0.001" class="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-violet-500">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-sm text-gray-400 mb-1 block">Batch Size</label>
+                                    <input type="number" id="batchSizeInput" value="16" class="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-violet-500">
+                                </div>
+                                <div>
+                                    <label class="text-sm text-gray-400 mb-1 block">Validation Split</label>
+                                    <input type="number" id="validationSplitInput" value="0.2" step="0.1" min="0.1" max="0.5" class="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-violet-500">
+                                </div>
+                            </div>
+                            <button onclick="startTraining()" id="trainBtn" class="w-full py-3 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white rounded-xl font-bold transition flex items-center justify-center gap-2 disabled:opacity-50">
+                                <i data-lucide="play" class="w-4 h-4"></i>
+                                Start Training
+                            </button>
+                        </div>
+                        <div id="trainingProgress" class="hidden mt-6 p-4 bg-black/20 rounded-xl border border-white/5">
+                            <div class="flex justify-between text-sm mb-2">
+                                <span class="text-gray-400">Training Progress</span>
+                                <span id="progressText" class="text-white font-mono">0%</span>
+                            </div>
+                            <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+                                <div id="progressBar" class="h-full bg-gradient-to-r from-violet-500 to-pink-500 progress-bar" style="width: 0%"></div>
+                            </div>
+                            <div id="trainingLog" class="mt-3 text-xs font-mono text-gray-400 h-24 overflow-y-auto custom-scrollbar"></div>
+                        </div>
+                    </div>
+                    <div class="glass-panel rounded-2xl p-6">
+                        <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                            <i data-lucide="bar-chart-2" class="w-5 h-5 text-violet-400"></i>
+                            Model Stats
+                        </h3>
+                        <div id="modelStats" class="space-y-4">
+                            <div class="p-4 bg-black/20 rounded-xl border border-white/5">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-sm text-gray-400">Model Status</span>
+                                    <span id="modelStatus" class="text-xs px-2 py-1 rounded-full bg-gray-800 text-gray-400">Not Trained</span>
+                                </div>
+                                <p class="text-xs text-gray-500">Train your model to enable predictions</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="p-4 bg-black/20 rounded-xl border border-white/5">
+                                    <p class="text-2xl font-bold text-white" id="accuracyDisplay">--</p>
+                                    <p class="text-xs text-gray-400">Accuracy</p>
+                                </div>
+                                <div class="p-4 bg-black/20 rounded-xl border border-white/5">
+                                    <p class="text-2xl font-bold text-white" id="lossDisplay">--</p>
+                                    <p class="text-xs text-gray-400">Loss</p>
+                                </div>
+                            </div>
+                            <div id="emptyChart" class="p-4 bg-black/20 rounded-xl border border-white/5 h-48 flex items-center justify-center">
+                                <p class="text-sm text-gray-500">Training charts will appear here</p>
+                            </div>
+                            <div id="fullChart" style="display:none" class="space-y-4">
+                                <div class="p-4 bg-black/20 rounded-xl border border-white/5">
+                                    <canvas id="lossChart" height="120"></canvas>
+                                </div>
+                                <div class="p-4 bg-black/20 rounded-xl border border-white/5">
+                                    <canvas id="accuracyChart" height="120"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Predict Tab -->
+            <div id="content-predict" class="hidden fade-in">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2">
+                        <div class="glass-panel rounded-2xl p-1">
+                            <div class="relative rounded-xl overflow-hidden bg-black/50 aspect-video shadow-2xl border border-white/10">
+                                <video id="predictVideo" autoplay playsinline class="w-full h-full object-cover" style="transform: scaleX(-1);"></video>
+                                <canvas id="predictCanvas" class="absolute inset-0 w-full h-full object-cover pointer-events-none transform scale-x-[-1]"></canvas>
+                                <div class="absolute top-4 left-4 z-20">
+                                    <div class="px-3 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-xs font-mono text-white flex items-center gap-2">
+                                        <span id="predictDot" class="w-2 h-2 rounded-full bg-gray-500"></span>
+                                        <span id="predictStatus">PREDICTION OFF</span>
+                                    </div>
+                                </div>
+                                <div id="predictPlaceholder" class="absolute inset-0 flex items-center justify-center">
+                                    <button onclick="startPrediction()" class="px-6 py-3 bg-gradient-to-r from-pink-500 to-violet-500 hover:from-pink-400 hover:to-violet-400 text-white rounded-xl font-bold transition flex items-center gap-2">
+                                        <i data-lucide="play" class="w-5 h-5"></i>
+                                        Start Prediction
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-6">
+                        <div class="glass-panel p-6 rounded-2xl">
+                            <h3 class="text-xl font-bold mb-4 text-white">Prediction Result</h3>
+                            <div class="text-center py-8">
+                                <p class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-pink-400 mb-2" id="predictedWord">--</p>
+                                <p class="text-sm text-gray-400" id="confidenceText">Ready to predict</p>
+                            </div>
+                            <div class="space-y-2" id="predictionHistory">
+                                <!-- Recent predictions -->
+                            </div>
+                        </div>
+                        <button onclick="speakPrediction()" id="speakBtn" class="w-full py-3 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white rounded-xl font-bold transition flex items-center justify-center gap-2 disabled:opacity-50">
+                            <i data-lucide="volume-2" class="w-4 h-4"></i>
+                            Speak Prediction
+                        </button>
+                        <button onclick="stopPrediction()" id="stopPredictBtn" class="hidden w-full py-3 bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/20 rounded-xl font-bold transition flex items-center justify-center gap-2">
+                            <i data-lucide="square" class="w-4 h-4"></i>
+                            Stop Prediction
+                        </button>
+                        <div class="glass-panel p-6 rounded-2xl mt-6">
+                            <h3 class="text-lg font-bold mb-4">Model Management</h3>
+                            <div class="space-y-3">
+                                <!-- Download Model -->
+                                <button onclick="downloadModel()" 
+                                    class="w-full py-2 bg-violet-600 hover:bg-violet-500 text-white rounded-lg text-sm">
+                                    Download Current Model
+                                </button>
+                                <!-- Divider -->
+                                <div class="pt-4 border-t border-white/10 space-y-3">
+                                    <p class="text-xs text-gray-400 uppercase">Load Existing Model</p>
+                                    <!-- JSON -->
+                                    <input type="file" id="jsonModelInput" accept=".json" hidden onchange="handleModelJson(event)">
+                                    <button onclick="document.getElementById('jsonModelInput').click()" 
+                                        class="w-full py-2 bg-black/20 border border-white/10 rounded-lg text-sm text-gray-300">
+                                        Upload model.json
+                                    </button>
+                                    <!-- BIN -->
+                                    <input type="file" id="binModelInput" accept=".bin" hidden onchange="handleModelBin(event)">
+                                    <button onclick="document.getElementById('binModelInput').click()" 
+                                        class="w-full py-2 bg-black/20 border border-white/10 rounded-lg text-sm text-gray-300">
+                                        Upload weights.bin
+                                    </button>
+                                    <!-- Vocabulary -->
+                                    <input type="file" id="vocabInput" accept=".json" hidden onchange="handleVocabulary(event)">
+                                    <button onclick="document.getElementById('vocabInput').click()" 
+                                        class="w-full py-2 border border-dashed border-white/20 rounded-lg text-sm text-gray-400">
+                                        Upload vocabulary.json
+                                    </button>
+                                </div>
+                                <!-- Status -->
+                                <div class="pt-4">
+                                    <span id="predictionModelStatus" 
+                                        class="text-xs px-3 py-1 rounded-full bg-gray-800 text-gray-400">
+                                        No Model Loaded
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <input type="file" id="excelInput" style="display:none" accept=".xlsx,.xls,.csv" onchange="handleExcelImport(event)" />
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed top-6 right-6 z-[9999] space-y-3"></div>
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="hidden fixed inset-0 z-[9998] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div class="glass-panel rounded-2xl p-6 w-full max-w-md border border-white/10">
+            <div class="flex items-start gap-3 mb-4">
+                <i data-lucide="alert-triangle" class="w-6 h-6 text-red-400 mt-0.5"></i>
+                <div>
+                    <h3 id="confirmTitle" class="text-lg font-bold text-white">Confirm Action</h3>
+                    <p id="confirmMessage" class="text-sm text-gray-400 mt-1"></p>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button onclick="closeConfirm()" 
+                    class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 transition">
+                    Cancel
+                </button>
+                <button id="confirmOkBtn"
+                    class="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white font-medium transition">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Preview Modal -->
+    <div id="previewModal" class="hidden fixed inset-0 z-[9998] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div class="glass-panel rounded-2xl p-6 w-full max-w-lg border border-white/10">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i data-lucide="eye" class="w-5 h-5 text-violet-400"></i>
+                    Sample Preview
+                </h3>
+                <button onclick="closePreview()" class="text-gray-400 hover:text-white">
+                    ✕
+                </button>
+            </div>
+            <div class="bg-black/30 rounded-xl p-4 border border-white/5">
+                <canvas id="previewCanvas" width="400" height="300" class="w-full rounded-lg"></canvas>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showToast(type, title, message, duration = 3000) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            const iconMap = {
+                success: 'check-circle',
+                error: 'x-circle',
+                warning: 'alert-triangle',
+                info: 'info'
+            };
+            toast.innerHTML = `
+                <i data-lucide="${iconMap[type]}" class="w-5 h-5 mt-0.5 text-white opacity-80"></i>
+                <div>
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+            `;
+            container.appendChild(toast);
+            lucide.createIcons();
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.25s ease forwards';
+                setTimeout(() => toast.remove(), 250);
+            }, duration);
+        }
+        function showConfirm(title, message, onConfirm) {
+            const modal = document.getElementById('confirmModal');
+            const titleEl = document.getElementById('confirmTitle');
+            const msgEl = document.getElementById('confirmMessage');
+            const okBtn = document.getElementById('confirmOkBtn');
+            titleEl.textContent = title;
+            msgEl.textContent = message;
+            modal.classList.remove('hidden');
+            lucide.createIcons();
+            // Remove old listeners
+            okBtn.replaceWith(okBtn.cloneNode(true));
+            const newOkBtn = document.getElementById('confirmOkBtn');
+            newOkBtn.addEventListener('click', () => {
+                modal.classList.add('hidden');
+                if (onConfirm) onConfirm();
+            });
+        }
+        function closeConfirm() {
+            document.getElementById('confirmModal').classList.add('hidden');
+        }
+    </script>
+    <script>
+        // App State
+        const app = {
+            camera: null,
+            pose: null,
+            model: null,
+            isRecording: false,
+            isPredicting: false,
+            dataset: [],
+            labels: [],
+            lastPrediction: null,
+            latestLandmarks: null,
+            predictionBuffer: [],
+            previewAnimation: null,
+            motionHistory: []
+        };
+        let lossChart = null;
+        let accuracyChart = null;
+        let loadedModelJson = null;
+        let loadedModelBin = null;
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            initializePose();
+        });
+        
+        // Tab Switching
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('[id^="tab-"]').forEach(btn => {
+                btn.classList.remove('tab-active', 'tab-accent-active', 'text-white');
+                btn.classList.add('text-gray-400');
+            });
+            const activeTab = document.getElementById(`tab-${tabName}`);
+            activeTab.classList.remove('text-gray-400');
+            activeTab.classList.add('text-white');
+            if (tabName === 'predict') {
+                activeTab.classList.add('tab-accent-active');
+            } else {
+                activeTab.classList.add('tab-active');
+            }
+            
+            // Update content
+            document.querySelectorAll('[id^="content-"]').forEach(content => {
+                content.classList.add('hidden');
+            });
+            document.getElementById(`content-${tabName}`).classList.remove('hidden');
+            
+            // Refresh Lucide icons
+            setTimeout(() => lucide.createIcons(), 10);
+        }
+        
+        // MediaPipe Pose Setup
+        function initializePose() {
+            app.pose = new Pose({locateFile: (file) => {
+                return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
+            }});
+            app.pose.setOptions({
+                modelComplexity: 1,
+                smoothLandmarks: true,
+                enableSegmentation: false,
+                smoothSegmentation: false,
+                minDetectionConfidence: 0.5,
+                minTrackingConfidence: 0.5
+            });
+            app.pose.onResults(onPoseResults);
+        }
+        
+        function onPoseResults(results) {
 
-    <!-- Title -->
-    <title>Tevroc Soft</title>
+            const canvas = document.getElementById('outputCanvas');
+            const predictCanvas = document.getElementById('predictCanvas');
 
-    <!-- SEO -->
-    <meta name="description" content="Tevroc Soft - Software solutions, web development, and digital services." />
-    <meta name="keywords" content="Tevroc Soft, software development, web apps, IT solutions" />
-    <meta name="author" content="Tevroc Soft" />
-    <link rel="canonical" href="https://tevrocsoft.co.za/" />
+            const ctx = canvas.getContext('2d');
+            const predictCtx = predictCanvas.getContext('2d');
 
-    <!-- Favicon (IMPORTANT) -->
-    <link rel="icon" type="image/png" sizes="48x48" href="/favicon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
-    <link rel="icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" href="/favicon.png" />
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            predictCtx.clearRect(0, 0, predictCanvas.width, predictCanvas.height);
 
-    <!-- Open Graph -->
-    <meta property="og:title" content="Tevroc Soft" />
-    <meta property="og:description" content="Software solutions and digital services." />
-    <meta property="og:image" content="https://tevrocsoft.co.za/favicon.png" />
-    <meta property="og:url" content="https://tevrocsoft.co.za/" />
-    <meta property="og:type" content="website" />
+            if (results.poseLandmarks && results.poseLandmarks.length > 0) {
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Tevroc Soft" />
-    <meta name="twitter:description" content="Software solutions and digital services." />
-    <meta name="twitter:image" content="https://tevrocsoft.co.za/favicon.png" />
-  </head>
+                app.latestLandmarks = results.poseLandmarks;
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+                // =====================================
+                // SAVE TEMPORAL MOTION HISTORY
+                // =====================================
+
+                app.motionHistory.push(
+                    JSON.parse(JSON.stringify(results.poseLandmarks))
+                );
+
+                const MAX_HISTORY = 15;
+
+                if (app.motionHistory.length > MAX_HISTORY) {
+                    app.motionHistory.shift();
+                }
+
+                // =====================================
+                // RECORD TAB DRAWING
+                // =====================================
+
+                drawConnectors(
+                    ctx,
+                    results.poseLandmarks,
+                    POSE_CONNECTIONS,
+                    {
+                        color: '#8b5cf6',
+                        lineWidth: 2
+                    }
+                );
+
+                drawLandmarks(
+                    ctx,
+                    results.poseLandmarks,
+                    {
+                        color: '#ec4899',
+                        lineWidth: 1,
+                        radius: 3
+                    }
+                );
+ 
+                // ===================================== Sa
+                // FAST TEMPORAL MOTION RENDERING
+                // =====================================
+
+                // Fade old frame slightly instead of clearing everything
+                predictCtx.fillStyle = 'rgba(0,0,0,0.18)';
+                predictCtx.fillRect(
+                    0,
+                    0,
+                    predictCanvas.width,
+                    predictCanvas.height
+                );
+
+                // Only render LAST FEW frames
+                const recentFrames =
+                    app.motionHistory.slice(-5);
+
+                recentFrames.forEach((frame, historyIndex) => {
+
+                    const alpha =
+                        (historyIndex + 1) / recentFrames.length;
+
+                    // =============================
+                    // DRAW CONNECTORS
+                    // =============================
+
+                    POSE_CONNECTIONS.forEach(([start, end]) => {
+
+                        const s = frame[start];
+                        const e = frame[end];
+
+                        if (!s || !e) return;
+
+                        predictCtx.beginPath();
+
+                        predictCtx.moveTo(
+                            s.x * predictCanvas.width,
+                            s.y * predictCanvas.height
+                        );
+
+                        predictCtx.lineTo(
+                            e.x * predictCanvas.width,
+                            e.y * predictCanvas.height
+                        );
+
+                        predictCtx.strokeStyle =
+                            `rgba(139,92,246,${alpha * 0.5})`;
+
+                        predictCtx.lineWidth = 2;
+
+                        predictCtx.stroke();
+                    });
+
+                    // =============================
+                    // DRAW LANDMARKS
+                    // =============================
+
+                    frame.forEach(lm => {
+
+                        predictCtx.beginPath();
+
+                        predictCtx.arc(
+                            lm.x * predictCanvas.width,
+                            lm.y * predictCanvas.height,
+                            3,
+                            0,
+                            Math.PI * 2
+                        );
+
+                        predictCtx.fillStyle =
+                            `rgba(236,72,153,${alpha})`;
+
+                        predictCtx.fill();
+                    });
+                });
+
+                // =====================================
+                // UI STATUS
+                // =====================================
+
+                document.getElementById('visionDot')
+                    .classList.replace('bg-gray-500', 'bg-green-500');
+
+                document.getElementById('visionStatus')
+                    .textContent = 'BODY DETECTED';
+
+                // =====================================
+                // LIVE TEMPORAL PREDICTION
+                // =====================================
+
+                if (app.isPredicting && app.model) {
+
+                    const prediction = predict(app.latestLandmarks);
+
+                    if (prediction) {
+                        updatePredictionDisplay(prediction);
+                    }
+                }
+
+            } else {
+
+                app.latestLandmarks = null;
+
+                app.motionHistory = [];
+
+                document.getElementById('visionDot')
+                    .classList.replace('bg-green-500', 'bg-gray-500');
+
+                document.getElementById('visionStatus')
+                    .textContent = 'VISION ACTIVE';
+            }
+        }
+                
+        // Camera Control
+        async function toggleCamera() {
+            const video = document.getElementById('video');
+            const predictVideo = document.getElementById('predictVideo');
+            const placeholder = document.getElementById('cameraPlaceholder');
+            
+            // ===============================
+            // STOP CAMERA (SAFE SHUTDOWN)
+            // ===============================
+            if (app.camera) {
+                app.isPredicting = false;
+                app.isRecording = false;
+                try {
+                    // Stop MediaPipe camera loop
+                    app.camera.stop();
+                } catch(e){}
+                app.camera = null;
+                // Stop real media stream tracks
+                if (video.srcObject) {
+                    video.srcObject.getTracks().forEach(track => track.stop());
+                }
+                video.pause();
+                predictVideo.pause();
+                video.srcObject = null;
+                predictVideo.srcObject = null;
+                document.getElementById('statusDot')
+                    .classList.replace('bg-green-500','bg-gray-500');
+                document.getElementById('cameraStatus').textContent = 'Camera Off';
+                placeholder.classList.remove('hidden');
+                return;
+            }
+            
+            // ===============================
+            // START CAMERA (SAFE INIT)
+            // ===============================
+            try {
+                if (!app.pose) {
+                    initializePose(); // safety check
+                }
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        width: { ideal: 640 },
+                        height: { ideal: 480 },
+                        frameRate: { ideal: 30 }
+                    }
+                });
+                video.srcObject = stream;
+                predictVideo.srcObject = stream;
+                await video.play();
+                await predictVideo.play();
+                
+                const canvas = document.getElementById('outputCanvas');
+                const predictCanvas = document.getElementById('predictCanvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                predictCanvas.width = video.videoWidth;
+                predictCanvas.height = video.videoHeight;
+                
+                placeholder.classList.add('hidden');
+                document.getElementById('statusDot')
+                    .classList.replace('bg-gray-500','bg-green-500');
+                document.getElementById('cameraStatus').textContent = 'Camera On';
+                
+                // Prevent multiple Camera instances
+                if (!app.camera) {
+                    const camera = new Camera(video, {
+                        onFrame: async () => {
+                            if (app.pose) {
+                                await app.pose.send({ image: video });
+                            }
+                        },
+                        width: video.videoWidth,
+                        height: video.videoHeight
+                    });
+                    app.camera = camera;
+                    camera.start();
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('warning', 'Camera', 'Could not access camera: ' + err.message);
+            }
+        }
+        
+        // Recording
+        async function startRecording() {
+
+            const label = document.getElementById('labelInput').value.trim();
+
+            if (!label) {
+                showToast('warning', 'Validation Error', 'Please enter a label/word first');
+                return;
+            }
+
+            if (!app.camera) {
+                showToast('warning', 'Validation Error', 'Please start the camera first');
+                return;
+            }
+
+            app.isRecording = true;
+
+            const overlay = document.getElementById('recordingOverlay');
+            const countdown = document.getElementById('countdown');
+            const btn = document.getElementById('recordBtn');
+
+            btn.disabled = true;
+            overlay.classList.remove('hidden');
+
+            const frames = [];
+
+            const recordingTime = 10000;
+            const frameRate = 20;
+
+            const totalFrames = (recordingTime / 1000) * frameRate;
+
+            let captured = 0;
+
+            countdown.textContent = 'REC';
+
+            const captureInterval = setInterval(() => {
+
+                const landmarks = app.latestLandmarks;
+
+                if (landmarks) {
+                    frames.push(JSON.parse(JSON.stringify(landmarks)));
+                }
+
+                captured++;
+
+                const remaining = Math.max(0, Math.ceil((totalFrames - captured) / frameRate));
+
+                countdown.textContent = `${remaining}s`;
+
+                if (captured >= totalFrames) {
+
+                    clearInterval(captureInterval);
+
+                    finishRecording(label, frames);
+                }
+
+            }, 1000 / frameRate);
+        }
+        
+        function finishRecording(label, frames) {
+
+            const overlay = document.getElementById('recordingOverlay');
+            const btn = document.getElementById('recordBtn');
+
+            overlay.classList.add('hidden');
+            btn.disabled = false;
+
+            app.isRecording = false;
+
+            if (frames.length > 0) {
+
+                app.dataset.push({
+                    label: label,
+                    frames: frames,
+                    timestamp: new Date().toISOString()
+                });
+
+                updateDatasetTable();
+
+                document.getElementById('labelInput').value = '';
+
+                showToast(
+                    'success',
+                    'Motion Sequence Recorded',
+                    `Saved ${frames.length} motion frames for "${label}"`
+                );
+
+            } else {
+
+                showToast(
+                    'error',
+                    'No Body Detected',
+                    'Please ensure your body is visible and try again.'
+                );
+            }
+        }
+                
+        // Dataset Management
+        function previewSample(index) {
+
+            const sample = app.dataset[index];
+
+            if (!sample || !sample.frames || sample.frames.length === 0) {
+                return;
+            }
+
+            const modal = document.getElementById('previewModal');
+            const canvas = document.getElementById('previewCanvas');
+            const ctx = canvas.getContext('2d');
+
+            modal.classList.remove('hidden');
+
+            if (app.previewAnimation) {
+                clearInterval(app.previewAnimation);
+            }
+
+            let frameIndex = 0;
+
+            function drawFrame() {
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                ctx.save();
+
+                ctx.scale(canvas.width, canvas.height);
+
+                const landmarks = sample.frames[frameIndex];
+
+                if (landmarks && landmarks.length > 0) {
+
+                    POSE_CONNECTIONS.forEach(([start, end]) => {
+
+                        const s = landmarks[start];
+                        const e = landmarks[end];
+
+                        if (!s || !e) return;
+
+                        ctx.beginPath();
+                        ctx.moveTo(s.x, s.y);
+                        ctx.lineTo(e.x, e.y);
+                        ctx.strokeStyle = '#8b5cf6';
+                        ctx.lineWidth = 0.005;
+                        ctx.stroke();
+                    });
+
+                    landmarks.forEach(lm => {
+
+                        ctx.beginPath();
+                        ctx.arc(lm.x, lm.y, 0.01, 0, 2 * Math.PI);
+                        ctx.fillStyle = '#ec4899';
+                        ctx.fill();
+                    });
+                }
+
+                ctx.restore();
+
+                frameIndex = (frameIndex + 1) % sample.frames.length;
+            }
+
+            drawFrame();
+
+            app.previewAnimation = setInterval(drawFrame, 100);
+
+            lucide.createIcons();
+        }
+
+        function closePreview() {
+
+            if (app.previewAnimation) {
+                clearInterval(app.previewAnimation);
+                app.previewAnimation = null;
+            }
+
+            document.getElementById('previewModal').classList.add('hidden');
+        }
+        
+        function updateDatasetTable() {
+            const tbody = document.getElementById('datasetTable');
+            const totalSamples = document.getElementById('totalSamples');
+            
+            // Group by label
+            const grouped = {};
+            app.dataset.forEach((item, idx) => {
+                if (!grouped[item.label]) {
+                    grouped[item.label] = { count: 0, indices: [] };
+                }
+                grouped[item.label].count++;
+                grouped[item.label].indices.push(idx);
+            });
+            
+            app.labels = Object.keys(grouped);
+            totalSamples.textContent = app.dataset.length;
+            
+            if (app.labels.length === 0) {
+                tbody.innerHTML = `
+                    <tr class="border-t border-white/5">
+                        <td colspan="4" class="px-4 py-8 text-center text-gray-500">
+                            No samples recorded yet
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = Object.keys(grouped).map(label => `
+                <tr class="border-t border-white/5 hover:bg-white/5 transition">
+                    <td class="px-4 py-3 font-medium text-white">${label}</td>
+                    <td class="px-4 py-3 text-gray-400">${grouped[label].count} motion sequences</td>
+                    <td class="px-4 py-3">
+                        <div class="flex gap-1">
+                            ${grouped[label].indices.slice(0, 5).map(index => 
+                                `<div onclick="previewSample(${index})"
+                                    class="w-6 h-6 rounded bg-violet-500/20 border border-violet-500/30 
+                                        flex items-center justify-center cursor-pointer 
+                                        hover:bg-violet-500/30 transition">
+                                    <i data-lucide="person-standing" class="w-3 h-3 text-violet-400"></i>
+                                </div>`
+                            ).join('')}
+                            ${grouped[label].count > 5 ? `<span class="text-xs text-gray-500 ml-1">+${grouped[label].count - 5}</span>` : ''}
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 text-right">
+                        <button onclick="deleteLabel('${label}')" class="p-2 hover:bg-red-500/10 text-red-400 rounded-lg transition">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+            setTimeout(() => lucide.createIcons(), 10);
+        }
+        
+        function deleteLabel(label) {
+            showConfirm(
+                "Delete Samples",
+                `Delete all samples for "${label}"? This action cannot be undone.`,
+                () => {
+                    app.dataset = app.dataset.filter(item => item.label !== label);
+                    updateDatasetTable();
+                    showToast('success', 'Deleted', `All samples for "${label}" removed.`);
+                }
+            );
+        }
+        
+        function clearDataset() {
+            if (app.dataset.length === 0) {
+                showToast('info', 'Nothing to Clear', 'Your dataset is already empty.');
+                return;
+            }
+            showConfirm(
+                "Clear Dataset",
+                "This will permanently delete ALL recorded samples. This action cannot be undone.",
+                () => {
+                    app.dataset = [];
+                    app.labels = [];
+                    updateDatasetTable();
+                    showToast('success', 'Dataset Cleared', 'All samples have been removed.');
+                }
+            );
+        }
+        
+        // Training
+        async function startTraining() {
+
+            // =====================================
+            // VALIDATE DATASET
+            // =====================================
+
+            if (app.dataset.length < 2) {
+
+                showToast(
+                    'warning',
+                    'Not Enough Data',
+                    'Need at least 2 samples to train.'
+                );
+
+                return;
+            }
+
+            // Get UNIQUE labels
+            const uniqueLabels =
+                [...new Set(app.dataset.map(d => d.label))];
+
+            app.labels = uniqueLabels;
+
+            // =====================================
+            // REQUIRE AT LEAST 2 CLASSES
+            // =====================================
+
+            if (uniqueLabels.length < 2) {
+
+                showToast(
+                    'warning',
+                    'Need Multiple Words',
+                    'You must record at least 2 DIFFERENT signs/words before training.'
+                );
+
+                console.error(
+                    'Training blocked: only one class detected.',
+                    uniqueLabels
+                );
+
+                return;
+            }
+
+            // =====================================
+            // SHOW CHARTS
+            // =====================================
+
+            document.getElementById("emptyChart").style.display = "none";
+            document.getElementById("fullChart").style.display = "unset";
+
+            const epochs =
+                parseInt(document.getElementById('epochsInput').value) || 50;
+
+            const learningRate =
+                parseFloat(document.getElementById('learningRateInput').value) || 0.001;
+
+            const batchSize =
+                parseInt(document.getElementById('batchSizeInput').value) || 16;
+
+            const validationSplit =
+                parseFloat(document.getElementById('validationSplitInput').value) || 0.2;
+
+            // =====================================
+            // PREPARE TRAINING DATA
+            // =====================================
+
+            const { xs, ys, labelMap } = prepareTrainingData();
+
+            console.log('====================================');
+            console.log('TRAINING DEBUG');
+            console.log('Samples:', app.dataset.length);
+            console.log('Classes:', labelMap.length);
+            console.log('Labels:', labelMap);
+            console.log('X Shape:', xs.shape);
+            console.log('Y Shape:', ys.shape);
+            console.log('====================================');
+
+            // =====================================
+            // SAFETY CHECK
+            // =====================================
+
+            if (ys.shape[1] < 2) {
+
+                showToast(
+                    'error',
+                    'Training Failed',
+                    'Dataset still contains less than 2 valid classes.'
+                );
+
+                console.error(
+                    'Invalid ys shape:',
+                    ys.shape
+                );
+
+                return;
+            }
+
+            // =====================================
+            // CREATE MODEL
+            // =====================================
+
+            createModel(labelMap.length);
+
+            // =====================================
+            // UI ELEMENTS
+            // =====================================
+
+            const progressDiv =
+                document.getElementById('trainingProgress');
+
+            const progressBar =
+                document.getElementById('progressBar');
+
+            const progressText =
+                document.getElementById('progressText');
+
+            const trainBtn =
+                document.getElementById('trainBtn');
+
+            const log =
+                document.getElementById('trainingLog');
+
+            progressDiv.classList.remove('hidden');
+
+            trainBtn.disabled = true;
+
+            initializeTrainingCharts();
+
+            // =====================================
+            // STATUS UI
+            // =====================================
+
+            document.getElementById('modelStatus').textContent = 'Training...';
+
+            document.getElementById('modelStatus')
+                .classList.remove('bg-gray-800', 'text-gray-400');
+
+            document.getElementById('modelStatus')
+                .classList.add('bg-violet-500/20', 'text-violet-400');
+
+            // =====================================
+            // TRAIN MODEL
+            // =====================================
+
+            await app.model.fit(xs, ys, {
+
+                epochs: epochs,
+
+                batchSize: batchSize,
+
+                validationSplit: validationSplit,
+
+                shuffle: true,
+
+                callbacks: {
+
+                    onEpochEnd: (epoch, logs) => {
+
+                        const percent =
+                            Math.round(((epoch + 1) / epochs) * 100);
+
+                        progressBar.style.width = percent + '%';
+
+                        progressText.textContent = percent + '%';
+
+                        const acc =
+                            logs.acc || logs.accuracy || 0;
+
+                        const logEntry =
+                            document.createElement('div');
+
+                        logEntry.textContent =
+                            `Epoch ${epoch + 1} | loss=${logs.loss.toFixed(4)} | acc=${acc.toFixed(4)}`;
+
+                        log.prepend(logEntry);
+
+                        document.getElementById('accuracyDisplay')
+                            .textContent =
+                            (acc * 100).toFixed(1) + '%';
+
+                        document.getElementById('lossDisplay')
+                            .textContent =
+                            logs.loss.toFixed(4);
+
+                        // =============================
+                        // UPDATE LOSS CHART
+                        // =============================
+
+                        lossChart.data.labels.push(epoch + 1);
+
+                        lossChart.data.datasets[0].data.push(logs.loss);
+
+                        lossChart.update();
+
+                        // =============================
+                        // UPDATE ACCURACY CHART
+                        // =============================
+
+                        accuracyChart.data.labels.push(epoch + 1);
+
+                        accuracyChart.data.datasets[0].data.push(acc);
+
+                        accuracyChart.update();
+                    }
+                }
+            });
+
+            // =====================================
+            // TRAINING COMPLETE
+            // =====================================
+
+            document.getElementById('modelStatus')
+                .textContent = 'Trained';
+
+            document.getElementById('modelStatus')
+                .classList.remove(
+                    'bg-violet-500/20',
+                    'text-violet-400'
+                );
+
+            document.getElementById('modelStatus')
+                .classList.add(
+                    'bg-green-500/20',
+                    'text-green-400'
+                );
+
+            trainBtn.disabled = false;
+
+            document.getElementById('speakBtn').disabled = false;
+
+            showToast(
+                'success',
+                'Training Complete',
+                'Temporal motion model is ready!'
+            );
+
+            console.log('TRAINING COMPLETE');
+        }
+
+        function initializeTrainingCharts() {
+            const lossCtx = document.getElementById('lossChart').getContext('2d');
+            const accCtx = document.getElementById('accuracyChart').getContext('2d');
+            
+            if (lossChart) lossChart.destroy();
+            if (accuracyChart) accuracyChart.destroy();
+            
+            lossChart = new Chart(lossCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Loss',
+                        data: [],
+                        borderColor: '#ec4899',
+                        backgroundColor: 'rgba(236,72,153,0.1)',
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { labels: { color: '#ccc' } } },
+                    scales: {
+                        x: { ticks: { color: '#888' } },
+                        y: { ticks: { color: '#888' } }
+                    }
+                }
+            });
+            
+            accuracyChart = new Chart(accCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Accuracy',
+                        data: [],
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139,92,246,0.1)',
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { labels: { color: '#ccc' } } },
+                    scales: {
+                        x: { ticks: { color: '#888' } },
+                        y: { ticks: { color: '#888' }, min: 0, max: 1 }
+                    }
+                }
+            });
+        }
+        
+        function prepareTrainingData() {
+
+            const xs = [];
+            const ys = [];
+
+            // Unique labels only
+            const labelMap = [...new Set(app.dataset.map(d => d.label))];
+
+            app.labels = labelMap;
+
+            const MAX_FRAMES = 30;
+            const FRAME_SIZE = 99;
+
+            app.dataset.forEach(item => {
+
+                const sequence = [];
+
+                if (item.frames && item.frames.length > 0) {
+
+                    item.frames.forEach(frame => {
+                        sequence.push(...flattenLandmarks(frame));
+                    });
+                }
+
+                // Pad sequence
+                while (sequence.length < MAX_FRAMES * FRAME_SIZE) {
+                    sequence.push(0);
+                }
+
+                // Trim if too long
+                const trimmed =
+                    sequence.slice(0, MAX_FRAMES * FRAME_SIZE);
+
+                xs.push(trimmed);
+
+                // One-hot encoding
+                const labelIndex = labelMap.indexOf(item.label);
+
+                const oneHot =
+                    Array(labelMap.length).fill(0);
+
+                oneHot[labelIndex] = 1;
+
+                ys.push(oneHot);
+            });
+
+            console.log('Training Samples:', xs.length);
+            console.log('Classes:', labelMap.length);
+            console.log('X Shape:', [xs.length, xs[0].length]);
+            console.log('Y Shape:', [ys.length, ys[0].length]);
+
+            return {
+                xs: tf.tensor2d(xs),
+                ys: tf.tensor2d(ys),
+                labelMap
+            };
+        }
+
+        function flattenLandmarks(poseLandmarks) {
+            const flat = [];
+            if (!poseLandmarks || poseLandmarks.length === 0) {
+                // If no pose detected, return zeros for all 33 landmarks * 3 coordinates = 99 features
+                for (let i = 0; i < 99; i++) {
+                    flat.push(0);
+                }
+                return flat;
+            }
+            
+            // Flatten all 33 landmarks (x, y, z)
+            poseLandmarks.forEach(lm => {
+                flat.push(lm.x || 0);
+                flat.push(lm.y || 0);
+                flat.push(lm.z || 0);
+            });
+            
+            // Ensure we always have 99 features (33 landmarks * 3)
+            while (flat.length < 99) {
+                flat.push(0);
+            }
+            
+            return flat.slice(0, 99); // Always return exactly 99 features
+        }
+        
+        function createModel(numClasses) {
+
+            const INPUT_SIZE = 2970;
+
+            app.model = tf.sequential({
+
+                layers: [
+
+                    // =====================================
+                    // INPUT LAYER
+                    // =====================================
+
+                    tf.layers.dense({
+                        inputShape: [INPUT_SIZE],
+                        units: 512,
+                        activation: 'relu'
+                    }),
+
+                    tf.layers.dropout({
+                        rate: 0.3
+                    }),
+
+                    // =====================================
+                    // HIDDEN LAYER 1
+                    // =====================================
+
+                    tf.layers.dense({
+                        units: 256,
+                        activation: 'relu'
+                    }),
+
+                    tf.layers.dropout({
+                        rate: 0.3
+                    }),
+
+                    // =====================================
+                    // HIDDEN LAYER 2
+                    // =====================================
+
+                    tf.layers.dense({
+                        units: 128,
+                        activation: 'relu'
+                    }),
+
+                    tf.layers.dropout({
+                        rate: 0.2
+                    }),
+
+                    // =====================================
+                    // HIDDEN LAYER 3
+                    // =====================================
+
+                    tf.layers.dense({
+                        units: 64,
+                        activation: 'relu'
+                    }),
+
+                    tf.layers.dropout({
+                        rate: 0.2
+                    }),
+
+                    // =====================================
+                    // OUTPUT LAYER
+                    // =====================================
+
+                    tf.layers.dense({
+                        units: numClasses,
+                        activation: 'softmax'
+                    })
+                ]
+            });
+
+            // =====================================
+            // COMPILE MODEL
+            // =====================================
+
+            app.model.compile({
+
+                optimizer: tf.train.adam(0.001),
+
+                loss: 'categoricalCrossentropy',
+
+                metrics: ['accuracy']
+            });
+
+            console.log('=====================================');
+            console.log('TEMPORAL MOTION MODEL CREATED');
+            console.log('Input Size:', INPUT_SIZE);
+            console.log('Classes:', numClasses);
+            console.log('=====================================');
+
+            app.model.summary();
+        }
+
+        // Prediction
+        async function downloadModel() {
+            if (!app.model) {
+                showToast('warning', 'No Model', 'Train a model first.');
+                return;
+            }
+            await app.model.save('downloads://signml-motion-model');
+            // Also export labels (VERY IMPORTANT)
+            const vocabBlob = new Blob(
+                [JSON.stringify(app.labels)],
+                { type: "application/json" }
+            );
+            const url = URL.createObjectURL(vocabBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "vocabulary.json";
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('success', 'Model Exported', 'Model + vocabulary downloaded.');
+        }
+        
+        function handleVocabulary(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                app.labels = JSON.parse(e.target.result);
+                showToast('success', 'Vocabulary Loaded', 'Labels restored.');
+            };
+            reader.readAsText(file);
+        }
+        
+        async function loadCustomModel() {
+            if (!loadedModelJson || !loadedModelBin) {
+                showToast('warning', 'Missing Files', 'Upload model.json and weights.bin');
+                return;
+            }
+            try {
+                app.model = await tf.loadLayersModel(
+                    tf.io.browserFiles([loadedModelJson, loadedModelBin])
+                );
+                document.getElementById('modelStatus').textContent = 'Loaded';
+                document.getElementById('modelStatus')
+                    .classList.remove('bg-gray-800','text-gray-400');
+                document.getElementById('modelStatus')
+                    .classList.add('bg-green-500/20','text-green-400');
+                showToast('success', 'Model Loaded', 'Ready for prediction!');
+            } catch (err) {
+                console.error(err);
+                showToast('error', 'Load Failed', err.message);
+            }
+        }
+        
+        function handleModelJson(event) {
+            loadedModelJson = event.target.files[0];
+            showToast('info', 'Model JSON Loaded', loadedModelJson.name);
+            if (loadedModelBin) loadCustomModel();
+        }
+        
+        function handleModelBin(event) {
+            loadedModelBin = event.target.files[0];
+            showToast('info', 'Weights Loaded', loadedModelBin.name);
+            if (loadedModelJson) loadCustomModel();
+        }
+        
+        function startPrediction() {
+            if (!app.camera) {
+                showToast('warning', 'Camera Off', 'Please start the camera first');
+                return;
+            }
+            if (!app.model) {
+                showToast('warning', 'No Model', 'Train or load a model first.');
+                return;
+            }
+            app.isPredicting = true;
+            document.getElementById('predictPlaceholder').classList.add('hidden');
+            document.getElementById('stopPredictBtn').classList.remove('hidden');
+            document.getElementById('speakBtn').disabled = false;
+            document.getElementById('predictDot').classList.remove('bg-gray-500');
+            document.getElementById('predictDot').classList.add('bg-green-500', 'animate-pulse');
+            document.getElementById('predictStatus').textContent = 'PREDICTING...';
+        }
+        
+        function stopPrediction() {
+            app.isPredicting = false;
+            document.getElementById('predictPlaceholder').classList.remove('hidden');
+            document.getElementById('stopPredictBtn').classList.add('hidden');
+            document.getElementById('predictedWord').textContent = '--';
+            document.getElementById('confidenceText').textContent = 'Ready to predict';
+            document.getElementById('predictDot').classList.remove('bg-green-500', 'animate-pulse');
+            document.getElementById('predictDot').classList.add('bg-gray-500');
+            document.getElementById('predictStatus').textContent = 'PREDICTION OFF';
+        }
+        
+        function predict(landmarks) {
+
+            if (!landmarks) return null;
+
+            const flat = flattenLandmarks(landmarks);
+
+            app.predictionBuffer.push(flat);
+
+            const MAX_FRAMES = 30;
+
+            if (app.predictionBuffer.length > MAX_FRAMES) {
+                app.predictionBuffer.shift();
+            }
+
+            if (app.predictionBuffer.length < MAX_FRAMES) {
+                return null;
+            }
+
+            const sequence = [];
+
+            app.predictionBuffer.forEach(frame => {
+                sequence.push(...frame);
+            });
+
+            const input = tf.tensor2d([sequence]);
+
+            const predictionTensor = app.model.predict(input);
+
+            const values = predictionTensor.dataSync();
+
+            const maxIndex = values.indexOf(Math.max(...values));
+
+            const confidence = values[maxIndex];
+
+            const label = app.labels[maxIndex];
+
+            tf.dispose([input, predictionTensor]);
+
+            app.lastPrediction = {
+                label,
+                confidence
+            };
+
+            return {
+                label,
+                confidence,
+                allPredictions: values
+            };
+        }
+        
+        function updatePredictionDisplay(prediction) {
+            const wordEl = document.getElementById('predictedWord');
+            const confEl = document.getElementById('confidenceText');
+            wordEl.textContent = prediction.label.toUpperCase();
+            confEl.textContent = `Confidence: ${(prediction.confidence * 100).toFixed(1)}%`;
+            
+            // Add to history
+            const history = document.getElementById('predictionHistory');
+            const item = document.createElement('div');
+            item.className = 'p-2 bg-white/5 rounded flex items-center justify-between text-sm';
+            item.innerHTML = `
+                <span class="font-medium">${prediction.label}</span>
+                <span class="text-xs text-gray-400">${(prediction.confidence * 100).toFixed(0)}%</span>
+            `;
+            history.prepend(item);
+            if (history.children.length > 5) {
+                history.removeChild(history.lastChild);
+            }
+        }
+        
+        function speakPrediction() {
+            if (app.lastPrediction && app.lastPrediction.label) {
+                const utterance = new SpeechSynthesisUtterance(app.lastPrediction.label);
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+        
+        // Excel Import/Export
+        function exportExcel() {
+
+            if (app.dataset.length === 0) {
+                showToast('info', 'Nothing to Export', 'No dataset samples available.');
+                return;
+            }
+
+            const rows = [];
+
+            app.dataset.forEach(item => {
+
+                const row = {
+                    Label: item.label,
+                    Frames: item.frames.length
+                };
+
+                item.frames.forEach((frame, frameIndex) => {
+
+                    const flat = flattenLandmarks(frame);
+
+                    flat.forEach((value, coordIndex) => {
+                        row[`F${frameIndex}_Coord_${coordIndex}`] = value;
+                    });
+                });
+
+                rows.push(row);
+            });
+
+            const ws = XLSX.utils.json_to_sheet(rows);
+
+            const wb = XLSX.utils.book_new();
+
+            XLSX.utils.book_append_sheet(wb, ws, 'MotionDataset');
+
+            XLSX.writeFile(wb, 'sign_language_motion_dataset.xlsx');
+        }
+        
+        function importExcel() {
+            document.getElementById('excelInput').click();
+        }
+        
+        function handleExcelImport(event) {
+
+            const file = event.target.files[0];
+
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+
+                const data = new Uint8Array(e.target.result);
+
+                const workbook = XLSX.read(data, { type: 'array' });
+
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+
+                const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+
+                let imported = 0;
+
+                jsonData.forEach(row => {
+
+                    const label = row.Label;
+                    const totalFrames = row.Frames || 0;
+
+                    if (!label || totalFrames <= 0) return;
+
+                    const frames = [];
+
+                    for (let f = 0; f < totalFrames; f++) {
+
+                        const coords = [];
+
+                        for (let i = 0; i < 99; i++) {
+                            coords.push(row[`F${f}_Coord_${i}`] || 0);
+                        }
+
+                        const landmarks = [];
+
+                        for (let j = 0; j < 33; j++) {
+
+                            landmarks.push({
+                                x: coords[j * 3],
+                                y: coords[j * 3 + 1],
+                                z: coords[j * 3 + 2]
+                            });
+                        }
+
+                        frames.push(landmarks);
+                    }
+
+                    app.dataset.push({
+                        label,
+                        frames,
+                        timestamp: new Date().toISOString()
+                    });
+
+                    imported++;
+                });
+
+                updateDatasetTable();
+
+                showToast(
+                    'success',
+                    'Import Complete',
+                    `Imported ${imported} motion sequences successfully.`
+                );
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+            
+    </script>
+</body>
+</html>s
