@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Exercise Step Counter (Knee Motion)</title>
+<script src="./libs/tf.min.js"></script>
+<script src="./libs/pose.js"></script>
+<script src="./libs/chart.umd.min.js"></script>
+<style>
+body {
+    margin:0;
+    font-family:"Segoe UI", sans-serif;
+    background:#0a0a0a;
+    color:#fff;
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+    overflow:scroll;
+}
+
+#container {
+    display:flex;
+    flex:1;
+    gap:20px;
+    padding:20px;
+    flex-wrap:wrap;
+    align-items:flex-start;
+    justify-content:center;
+}
+
+#videoCanvasWrap {
+    position:relative;
+    flex:1 1 480px;
+    max-width:480px;
+}
+#mainCanvas  {
+    width:100%;
+    border-radius:16px;
+    background:#111;
+}
+
+#avatarCanvas {
+    width:100%;
+    border-radius:16px;
+    background:#DDDDDD;
+}
+
+</style>
+</head>
+<body>
+
+<div id="container">
+    <div id="videoCanvasWrap">
+        <video id="video" autoplay playsinline style="display:none"></video>
+        <canvas id="mainCanvas" width="480" height="320"></canvas>
+    </div>
+
+    <div id="analytics">    
+        <canvas id="avatarCanvas" width="480" height="320"></canvas>
+    </div>
+</div>
+
+<script src="./libs/three.min.js"></script>
+<script src="./libs/GLTFLoader.js"></script>
+
+<script>
+const video = document.getElementById("video");
+const mainCanvas = document.getElementById("mainCanvas");
+const ctx = mainCanvas.getContext("2d"); 
+const width = mainCanvas.width;
+const height = mainCanvas.height;
+
+const avatarCanvas = document.getElementById("avatarCanvas");
+//const ctx2 = avatarCanvas.getContext("2d"); 
+
+// Start camera
+async function startCamera() {
+    const stream = await navigator.mediaDevices.getUserMedia({video:{width,height}, audio:false});
+    video.srcObject = stream;
+    await video.play();
+}
+
+// Draw skeleton sticks
+function drawSkeleton(landmarks , ctx) {
+    const connections = [
+        [11,13],[13,15],
+        [12,14],[14,16],
+        [11,12],
+        [23,25],[25,27],
+        [24,26],[26,28],
+        [23,24],
+        [11,23],[12,24]
+    ];
+
+    ctx.strokeStyle = "#00ffff";
+    ctx.lineWidth = 2;
+    connections.forEach(([a,b])=>{
+        const p1 = landmarks[a];
+        const p2 = landmarks[b];
+        if(p1 && p2){
+            ctx.beginPath();
+            ctx.moveTo(p1.x * width, p1.y * height);
+            ctx.lineTo(p2.x * width, p2.y * height);
+            ctx.stroke();
+        }
+    });
+
+    landmarks.forEach(lm=>{
+        ctx.fillStyle = "#ff00ff";
+        ctx.beginPath();
+        ctx.arc(lm.x * width, lm.y * height, 3,0,2*Math.PI);
+        ctx.fill();
+    });
+}
+// Draw Avatar 
+const renderer = new THREE.WebGLRenderer({ canvas: avatarCanvas, alpha: true });
+renderer.setSize(width, height);
+
+const scene = new THREE.Scene();
+
+// Camera setup
+const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+camera.position.set(0, 1.5, 3); // slightly above ground
+camera.lookAt(0, 1, 0); // look at center height
+
+// Light
+const light = new THREE.DirectionalLight(0xffffff, 1);
+light.position.set(5,10,7);
+scene.add(light);
+
+// Load the GLTF avatar
+let avatar;
+let bones = {};
+const loader = new THREE.GLTFLoader();
+loader.load('humanoid_avatar_with_rig.glb', (gltf) => {
+    avatar = gltf.scene;
+    avatar.scale.set(1,1,1);
+
+    // Auto-center avatar vertically using bounding box
+    const box = new THREE.Box3().setFromObject(avatar);
+    const height = box.max.y - box.min.y;
+    avatar.position.y = 0;//height / 2; // move it up so center is at y=0
+
+    scene.add(avatar);
+    console.log("Avatar loaded and centered!");
+
+    console.log("Avatar loaded");
+
+    // Traverse all objects in the avatar
+    var arr = [];
+    avatar.traverse((obj) => {
+ 
+        if(obj.type == "Bone"){
+            arr.push(obj.name);
+             bones[obj.name] = obj;
+        }
+    });
+    console.log(arr);
+
+});
+
+// Animate loop
+function animate() {
+    requestAnimationFrame(animate);
+
+    if (avatar) {
+        //avatar.rotation.y += 0.01; // slowly rotate for better visibility
+    }
+
+    renderer.render(scene, camera);
+}
+
+setTimeout(()=>{ animate();})
+
+function drawAvatar(landmarks) {
+    if (!avatar || !landmarks) return; 
+    // Helper to calculate 2D angle between 3 points
+    function calculateAngle(a, b, c) {
+        const ab = { x: a.x - b.x, y: a.y - b.y };
+        const cb = { x: c.x - b.x, y: c.y - b.y };
+        const dot = ab.x * cb.x + ab.y * cb.y;
+        const magAB = Math.sqrt(ab.x * ab.x + ab.y * ab.y);
+        const magCB = Math.sqrt(cb.x * cb.x + cb.y * cb.y);
+        const angle = Math.acos(Math.min(Math.max(dot / (magAB * magCB), -1), 1)); // clamp
+        return angle;
+    }
+
+    // Map bones
+    const b = bones; // previously collected from avatar.traverse(obj => { if(obj.isBone) bones[obj.name] = obj; });
+
+    // Head
+    if (b['Head_070'] && b['Neck_069']) {
+        const nose = landmarks[0];
+        const leftEye = landmarks[1];
+        const rightEye = landmarks[2];
+
+        if (nose && leftEye && rightEye) {
+
+            // Horizontal rotation (yaw)
+            const dx = rightEye.x - leftEye.x;
+            const dy = rightEye.y - leftEye.y;
+            const yaw = Math.atan2(dy, dx); 
+
+            // Vertical rotation (pitch)
+            const eyeMidY = (leftEye.y + rightEye.y) / 2;
+            const pitch = (nose.y - eyeMidY) * 3; // scale factor
+
+            // Apply (invert yaw because webcam is mirrored)
+            b['Head_070'].rotation.y = -yaw;
+            b['Head_070'].rotation.x = pitch;
+        }
+    }
+
+
+    // Arms
+    if (b['LeftArm_046'] && b['LeftForeArm_047'] && b['LeftHand_048']) {
+        const shoulder = landmarks[11], elbow = landmarks[13], wrist = landmarks[15];
+        if (shoulder && elbow && wrist) {
+            const angle = calculateAngle(shoulder, elbow, wrist);
+            b['LeftArm_046'].rotation.x = -angle;
+        }
+    }
+
+    if (b['RightArm_021'] && b['RightForeArm_022'] && b['RightHand_023']) {
+        const shoulder = landmarks[12], elbow = landmarks[14], wrist = landmarks[16];
+        if (shoulder && elbow && wrist) {
+            const angle = calculateAngle(shoulder, elbow, wrist);
+            b['RightArm_021'].rotation.x = -angle;
+        }
+    }
+
+    return;
+    // Legs
+    if (b['LeftUpLeg_03'] && b['LeftLeg_04'] && b['LeftFoot_05']) {
+        const hip = landmarks[23], knee = landmarks[25], ankle = landmarks[27];
+        if (hip && knee && ankle) {
+            const angle = calculateAngle(hip, knee, ankle);
+            b['LeftUpLeg_03'].rotation.x = -angle; // rotate forward/back
+        }
+    }
+
+    if (b['RightUpLeg_010'] && b['RightLeg_011'] && b['RightFoot_012']) {
+        const hip = landmarks[24], knee = landmarks[26], ankle = landmarks[28];
+        if (hip && knee && ankle) {
+            const angle = calculateAngle(hip, knee, ankle);
+            b['RightUpLeg_010'].rotation.x = -angle;
+        }
+    }
+
+
+    // Spine and Hips
+    if (b['Hips_02'] && b['Spine_017'] && b['Spine1_018']) {
+        const hipLeft = landmarks[23], hipRight = landmarks[24];
+        if (hipLeft && hipRight) {
+            const midHipX = (hipLeft.x + hipRight.x) / 2;
+            const midHipY = (hipLeft.y + hipRight.y) / 2;
+            const neck = landmarks[0]; // nose as approximate top
+            if (neck) {
+                const angle = Math.atan2(neck.y - midHipY, neck.x - midHipX);
+                b['Hips_02'].rotation.y = -angle; 
+            }
+        }
+    }
+
+}
+//
+function calculateAngle(a, b, c) {
+    const ab = { x: a.x - b.x, y: a.y - b.y };
+    const cb = { x: c.x - b.x, y: c.y - b.y };
+
+    const dot = ab.x * cb.x + ab.y * cb.y;
+    const magAB = Math.sqrt(ab.x * ab.x + ab.y * ab.y);
+    const magCB = Math.sqrt(cb.x * cb.x + cb.y * cb.y);
+
+    const angle = Math.acos(dot / (magAB * magCB));
+    return angle * (180 / Math.PI);
+}
+// Init Pose
+const pose = new Pose({
+    locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`
+});
+
+pose.setOptions({
+    modelComplexity:1,
+    smoothLandmarks:true,
+    enableSegmentation:false,
+    minDetectionConfidence:0.5,
+    minTrackingConfidence:0.5
+});
+
+pose.onResults(results=>{
+    ctx.clearRect(0,0,width,height); 
+
+    ctx.drawImage(video,0,0,width,height);
+
+    if(results.poseLandmarks){
+        drawSkeleton(results.poseLandmarks , ctx);
+        drawAvatar(results.poseLandmarks); 
+    }
+});
+
+async function renderFrame(){
+    await pose.send({image: video});
+    requestAnimationFrame(renderFrame);
+}
+
+(async()=>{
+    await startCamera();
+    renderFrame();
+})();
+</script>
+</body>
+</html>
