@@ -1,0 +1,6481 @@
+
+---
+
+# MotionMock Studio – Product Requirements Document (PRD)
+
+## Part 1 – Product Vision, User Experience, UI Design System, Navigation & Project Workflow
+
+---
+
+# Project Name
+
+**MotionMock Studio**
+
+---
+
+# Project Goal
+
+Build a modern, standalone desktop-style web application that enables users to create beautiful animated promotional videos for apps, websites, SaaS products, dashboards, and digital products.
+
+The application must allow users to:
+
+* Record their screen directly from the app.
+* Capture screenshots directly from the app.
+* Import screenshots, videos, or images.
+* Place captured content inside realistic device mockups.
+* Create polished animated scenes.
+* Arrange scenes on a professional timeline.
+* Preview animations in real time.
+* Export professional MP4 videos.
+
+The application should feel like a premium creative tool rather than a simple web form.
+
+Think of the usability of creative software like Figma, Framer, Final Cut Pro, DaVinci Resolve, or Canva—but with its own original identity and focused specifically on creating app showcase videos.
+
+---
+
+# Core Principles
+
+The application should prioritize:
+
+* Simplicity
+* Speed
+* Smooth animations
+* Professional design
+* Discoverability
+* Minimal clicks
+* Real-time feedback
+* High performance
+
+Every action should feel immediate.
+
+The application should never feel cluttered.
+
+---
+
+# Application Type
+
+Standalone application.
+
+No login.
+
+No user accounts.
+
+No billing.
+
+No subscriptions.
+
+No cloud storage.
+
+No online collaboration.
+
+Everything should function locally in the browser, using local storage or IndexedDB for persistence.
+
+---
+
+# Target Users
+
+Primary users include:
+
+* Indie developers
+* SaaS founders
+* UI/UX designers
+* Mobile app developers
+* Website designers
+* Marketing teams
+* Freelancers
+* Agencies
+* Product designers
+* Startup founders
+
+---
+
+# Primary Workflow
+
+The typical workflow should be:
+
+1. Open MotionMock Studio.
+2. Create a new project.
+3. Record the screen or import media.
+4. Add content to one or more device mockups.
+5. Customize backgrounds and camera.
+6. Add text and effects.
+7. Arrange scenes on the timeline.
+8. Preview the animation.
+9. Export the final video.
+
+The application should guide users naturally through this process.
+
+---
+
+# Design Language
+
+The interface should have a premium modern appearance.
+
+Characteristics:
+
+* Dark mode by default.
+* Large rounded corners (16–20px).
+* Frosted glass side panels.
+* Soft shadows.
+* Smooth transitions.
+* High-quality icons.
+* Generous spacing.
+* Modern typography.
+* Minimal visual noise.
+
+Avoid skeuomorphic design or unnecessary decoration.
+
+---
+
+# Color Palette
+
+Primary Background: Near-black charcoal.
+
+Secondary Panels: Slightly lighter charcoal.
+
+Accent Color: Configurable by the user (default: electric blue).
+
+Success: Green.
+
+Warning: Amber.
+
+Error: Red.
+
+Text:
+
+* Primary: White
+* Secondary: Light gray
+* Disabled: Medium gray
+
+Use color sparingly to emphasize important actions.
+
+---
+
+# Typography
+
+Use a clean sans-serif font such as Inter or Geist.
+
+Hierarchy:
+
+* Display
+* H1
+* H2
+* H3
+* Body
+* Caption
+* Small Labels
+
+Ensure consistent spacing and readability.
+
+---
+
+# Window Layout
+
+The application uses a five-region layout.
+
+## Top Toolbar
+
+Contains:
+
+* Project Name
+* Save Status
+* Undo
+* Redo
+* Search
+* Play
+* Pause
+* Export
+* Settings
+
+Toolbar remains fixed.
+
+---
+
+## Left Sidebar
+
+Width approximately 280px.
+
+Contains navigation:
+
+* Home
+* Projects
+* Record Screen
+* Screenshot
+* Templates
+* Device Library
+* Assets
+* Scenes
+* Export
+* Preferences
+
+Sidebar is collapsible.
+
+---
+
+## Center Workspace
+
+This is the largest region.
+
+Contains the live preview canvas.
+
+Users interact directly with scenes here.
+
+Supports:
+
+* Zoom
+* Pan
+* Selection
+* Multi-select
+* Drag-and-drop
+
+---
+
+## Right Properties Panel
+
+Context-sensitive inspector.
+
+Displays editable properties for the selected item, such as:
+
+* Position
+* Scale
+* Rotation
+* Opacity
+* Device settings
+* Background settings
+* Animation settings
+* Camera settings
+* Text settings
+
+If nothing is selected, show project-level properties.
+
+---
+
+## Bottom Timeline
+
+Resizable timeline similar to professional video editing software.
+
+Supports:
+
+* Tracks
+* Keyframes
+* Zoom
+* Snapping
+* Markers
+* Scene durations
+
+---
+
+# Startup Experience
+
+When opening the application, display a Welcome Screen.
+
+Include:
+
+* App Logo
+* Welcome message
+* "Create New Project" button
+* "Open Existing Project" button
+* Recent Projects list
+* Quick Tips panel
+
+The design should immediately communicate professionalism.
+
+---
+
+# New Project Dialog
+
+Selecting "Create New Project" opens a modal.
+
+Fields:
+
+Project Name
+
+Video Orientation:
+
+* Landscape (16:9)
+* Portrait (9:16)
+* Square (1:1)
+* Custom
+
+Resolution:
+
+* 720p
+* 1080p
+* 1440p
+* 4K
+* Custom
+
+Frame Rate:
+
+* 24 FPS
+* 30 FPS
+* 60 FPS
+
+Background Color
+
+Default Device
+
+Auto-save Enabled
+
+Create Project
+
+Cancel
+
+---
+
+# Home Dashboard
+
+Once a project is created, show the main editor.
+
+The dashboard should include:
+
+Toolbar
+
+Preview
+
+Timeline
+
+Properties
+
+Scene List
+
+Everything should fit without unnecessary scrolling.
+
+---
+
+# Scene Navigation
+
+Each project consists of one or more scenes.
+
+Display scenes in a vertical list.
+
+Each scene card shows:
+
+* Thumbnail
+* Scene Name
+* Duration
+* Device Type
+* Transition
+* Lock Status
+
+Allow:
+
+* Duplicate
+* Delete
+* Rename
+* Reorder
+
+---
+
+# Workspace Interaction
+
+Users should be able to:
+
+Select objects.
+
+Drag objects.
+
+Resize.
+
+Rotate.
+
+Group.
+
+Ungroup.
+
+Align.
+
+Distribute.
+
+Snap to guides.
+
+Duplicate.
+
+Delete.
+
+Lock.
+
+Hide.
+
+---
+
+# Context Menus
+
+Right-click menus should provide relevant actions depending on the selected object.
+
+For example:
+
+Device:
+
+* Replace Screen
+* Change Device
+* Duplicate
+* Lock
+* Delete
+
+Text:
+
+* Edit
+* Duplicate
+* Animate
+* Convert to Component
+
+Media:
+
+* Replace
+* Crop
+* Trim
+* Duplicate
+* Delete
+
+---
+
+# Search System
+
+Provide global search.
+
+Search should find:
+
+Projects
+
+Assets
+
+Scenes
+
+Templates
+
+Devices
+
+Backgrounds
+
+Icons
+
+Fonts
+
+Effects
+
+Results update instantly while typing.
+
+---
+
+# Keyboard Navigation
+
+The entire application should be usable via keyboard.
+
+Examples:
+
+Ctrl + N
+
+Create Project
+
+Ctrl + O
+
+Open Project
+
+Ctrl + S
+
+Save
+
+Ctrl + Z
+
+Undo
+
+Ctrl + Shift + Z
+
+Redo
+
+Delete
+
+Remove Selected
+
+Space
+
+Play/Pause
+
+Arrow Keys
+
+Move Selection
+
+Shift
+
+Multi-select
+
+---
+
+# Autosave
+
+The application automatically saves every few seconds.
+
+Display a small status indicator:
+
+Saving...
+
+Saved
+
+Unsaved Changes
+
+Autosave should never interrupt editing.
+
+---
+
+# Project Management
+
+Projects are stored locally.
+
+Display:
+
+Project Name
+
+Created Date
+
+Last Edited
+
+Duration
+
+Resolution
+
+Frame Rate
+
+Thumbnail
+
+Allow:
+
+Rename
+
+Duplicate
+
+Delete
+
+Export
+
+Open
+
+---
+
+# Empty Project State
+
+If a project has no scenes, display helpful onboarding guidance.
+
+Include:
+
+* Add your first scene.
+* Record your screen.
+* Import media.
+* Capture a screenshot.
+* Browse templates.
+
+Provide large visual buttons for these actions.
+
+---
+
+# Undo/Redo System
+
+Every editing action must support undo and redo.
+
+Examples:
+
+Move object
+
+Resize
+
+Rotate
+
+Delete
+
+Replace media
+
+Change colors
+
+Animation edits
+
+Timeline edits
+
+The undo history should support at least 100 actions.
+
+---
+
+# Performance Goals
+
+The application should:
+
+Load in under 3 seconds on a typical broadband connection.
+
+Maintain 60 FPS interaction when editing.
+
+Keep the interface responsive during media imports.
+
+Render previews smoothly without freezing.
+
+---
+
+# Accessibility
+
+Support keyboard-only navigation.
+
+Provide visible focus indicators.
+
+Maintain sufficient color contrast.
+
+Use semantic HTML where applicable.
+
+Respect reduced-motion preferences by offering simplified UI animations.
+
+---
+
+Below is **Part 2** of the MotionMock Studio Product Requirements Document. It continues directly from Part 1 and is written so Base44 can implement the entire recording and media capture system.
+
+---
+
+# MotionMock Studio – PRD
+
+# Part 2 – Screen Recording Studio, Screenshot Studio, Media Manager & Video Editor
+
+---
+
+# Module Overview
+
+Build a professional built-in recording studio that allows users to capture their screen without leaving MotionMock Studio.
+
+The recording system should feel like a lightweight version of professional screen recording software while remaining extremely simple to use.
+
+Users should never need another application to create content for MotionMock Studio.
+
+---
+
+# Primary Goals
+
+The recording module must allow users to:
+
+* Record the entire display
+* Record an application window
+* Record a browser tab
+* Record webcam
+* Record microphone
+* Record system audio
+* Record webcam + screen together
+* Capture screenshots
+* Trim recordings
+* Crop recordings
+* Capture still frames
+* Import recordings directly into projects
+
+Everything should happen inside MotionMock Studio.
+
+---
+
+# Navigation
+
+Add two new sections to the sidebar.
+
+```
+Home
+
+Projects
+
+Record Screen
+
+Take Screenshot
+
+Templates
+
+Assets
+
+Scenes
+
+Export
+
+Settings
+```
+
+---
+
+# Screen Recording Home
+
+When users click **Record Screen**, display a dedicated recording dashboard.
+
+Display:
+
+Large Record Button
+
+Recording Mode Cards
+
+Recent Recordings
+
+Recording Settings
+
+Quick Tips
+
+---
+
+# Recording Modes
+
+Allow users to choose:
+
+Entire Screen
+
+Application Window
+
+Browser Tab
+
+Webcam Only
+
+Screen + Webcam
+
+Screen + Microphone
+
+Screen + System Audio
+
+Screen + Webcam + Audio
+
+Screen + Webcam + Microphone
+
+Each mode should include a visual preview icon.
+
+---
+
+# Recording Dashboard
+
+The page should contain three panels.
+
+Left Panel
+
+Recording options.
+
+Center
+
+Large animated illustration.
+
+Right
+
+Recording preferences.
+
+---
+
+# Recording Preferences
+
+Allow users to configure:
+
+Countdown
+
+Resolution
+
+Frame Rate
+
+Capture Cursor
+
+Highlight Mouse Clicks
+
+Highlight Cursor
+
+Capture Microphone
+
+Capture System Audio
+
+Noise Suppression
+
+Echo Cancellation
+
+Show Webcam
+
+Webcam Shape
+
+Webcam Border
+
+Webcam Position
+
+Automatically Import After Recording
+
+Automatically Add To Timeline
+
+Automatically Trim Silence
+
+Remember Preferences
+
+---
+
+# Countdown
+
+Before recording begins show a full-screen overlay.
+
+User options:
+
+No Countdown
+
+3 Seconds
+
+5 Seconds
+
+10 Seconds
+
+Custom (1–30)
+
+Display:
+
+Large Number
+
+Recording Mode
+
+Project Name
+
+Microphone Status
+
+Audio Status
+
+---
+
+Countdown Animation
+
+Fade in.
+
+Scale animation.
+
+Soft pulse.
+
+Play optional beep every second.
+
+Last second flashes red.
+
+Automatically begin recording.
+
+---
+
+# Recording Controls
+
+While recording display a floating recording toolbar.
+
+Controls:
+
+Pause
+
+Resume
+
+Stop
+
+Cancel
+
+Mute Microphone
+
+Disable Webcam
+
+Mute System Audio
+
+Drawing Mode
+
+Screenshot
+
+Elapsed Time
+
+Recording Indicator
+
+Settings
+
+The toolbar should be draggable.
+
+---
+
+# Floating Recording Widget
+
+Display:
+
+Recording Dot
+
+Elapsed Time
+
+Pause Button
+
+Stop Button
+
+Microphone Indicator
+
+Audio Meter
+
+Camera Indicator
+
+---
+
+# Audio Capture
+
+Support:
+
+Microphone
+
+System Audio
+
+Both Together
+
+Allow selecting microphones.
+
+Display volume meters.
+
+Noise suppression.
+
+Echo cancellation.
+
+Gain control.
+
+Mute toggle.
+
+---
+
+# Webcam
+
+Allow webcam recording.
+
+Options:
+
+Circle
+
+Rounded Rectangle
+
+Square
+
+No Border
+
+Shadow
+
+Glow
+
+Background Blur
+
+Green Screen (future-ready)
+
+---
+
+Webcam Positions
+
+Top Left
+
+Top Right
+
+Bottom Left
+
+Bottom Right
+
+Center
+
+Custom Drag Position
+
+---
+
+# Cursor Effects
+
+Allow:
+
+Capture Cursor
+
+Hide Cursor
+
+Highlight Cursor
+
+Cursor Glow
+
+Click Ripple
+
+Click Circle
+
+Click Animation
+
+Pointer Trail
+
+---
+
+# Drawing Tools During Recording
+
+Optional annotation layer.
+
+Pen
+
+Highlighter
+
+Rectangle
+
+Circle
+
+Arrow
+
+Text
+
+Undo
+
+Redo
+
+Clear
+
+Choose Color
+
+Thickness
+
+Opacity
+
+---
+
+# Hotkeys
+
+Users can configure:
+
+Start Recording
+
+Pause
+
+Resume
+
+Stop
+
+Take Screenshot
+
+Toggle Webcam
+
+Toggle Microphone
+
+---
+
+# Recording Completion
+
+After recording stops show a processing screen.
+
+Display:
+
+Generating Preview...
+
+Importing Recording...
+
+Creating Thumbnail...
+
+Duration
+
+Resolution
+
+File Size
+
+Recording Date
+
+---
+
+# Recording Review Window
+
+Automatically open editor.
+
+Display:
+
+Large Preview
+
+Trim Timeline
+
+Replace Recording
+
+Delete
+
+Save
+
+Add To Timeline
+
+Record Again
+
+---
+
+# Media Manager
+
+Create a dedicated media library.
+
+Display as grid.
+
+Each item shows:
+
+Thumbnail
+
+Filename
+
+Duration
+
+Resolution
+
+Size
+
+Date
+
+Tags
+
+Favorite
+
+---
+
+Allow:
+
+Rename
+
+Duplicate
+
+Delete
+
+Move
+
+Search
+
+Sort
+
+Filter
+
+Preview
+
+---
+
+# Import Media
+
+Support drag-and-drop.
+
+Supported:
+
+PNG
+
+JPG
+
+WEBP
+
+SVG
+
+GIF
+
+MP4
+
+MOV
+
+WEBM
+
+---
+
+Automatically detect:
+
+Resolution
+
+Aspect Ratio
+
+Orientation
+
+Duration
+
+---
+
+# Screenshot Studio
+
+Create dedicated screenshot module.
+
+Capture:
+
+Entire Screen
+
+Application
+
+Browser Tab
+
+---
+
+Screenshot Timer
+
+None
+
+3
+
+5
+
+10
+
+Custom
+
+---
+
+After capture automatically:
+
+Open Editor
+
+Save Asset
+
+Generate Thumbnail
+
+Offer Add To Scene
+
+Offer Replace Device Screen
+
+---
+
+# Screenshot Editor
+
+Professional editor.
+
+Features:
+
+Crop
+
+Resize
+
+Rotate
+
+Flip
+
+Blur
+
+Pixelate
+
+Draw
+
+Shapes
+
+Arrow
+
+Line
+
+Rectangle
+
+Circle
+
+Highlight
+
+Number Steps
+
+Text Labels
+
+Color Picker
+
+Undo
+
+Redo
+
+Zoom
+
+Pan
+
+---
+
+# Smart Crop
+
+Provide presets.
+
+16:9
+
+9:16
+
+1:1
+
+4:5
+
+3:2
+
+Custom
+
+---
+
+# Video Editor
+
+Every imported recording opens in the editor.
+
+---
+
+# Trim Tool
+
+Display professional trimming timeline.
+
+Allow:
+
+Trim Start
+
+Trim End
+
+Frame Precision
+
+Drag Handles
+
+Loop Selection
+
+Preview
+
+Undo
+
+Redo
+
+---
+
+# Split Tool
+
+Users can split videos.
+
+Split at playhead.
+
+Generate two clips.
+
+Both remain editable.
+
+---
+
+# Cut Tool
+
+Allow deleting selected section.
+
+Automatically join remaining clips.
+
+---
+
+# Crop Tool
+
+Allow repositioning.
+
+Maintain quality.
+
+Presets.
+
+Free Crop.
+
+---
+
+# Speed Tool
+
+Playback speeds:
+
+0.25x
+
+0.5x
+
+1x
+
+1.25x
+
+1.5x
+
+2x
+
+3x
+
+4x
+
+---
+
+# Volume Controls
+
+Adjust:
+
+Volume
+
+Fade In
+
+Fade Out
+
+Mute
+
+Normalize Audio
+
+---
+
+# Freeze Frame
+
+Users can freeze any frame.
+
+Duration adjustable.
+
+Useful for feature callouts.
+
+---
+
+# Frame Capture
+
+Extract still images.
+
+Formats:
+
+PNG
+
+JPG
+
+WEBP
+
+Save into Assets automatically.
+
+---
+
+# Smart Thumbnail
+
+Generate thumbnails automatically.
+
+Allow custom thumbnail selection.
+
+---
+
+# Replace Screen
+
+Allow replacing recorded screen with updated recording.
+
+Keep:
+
+Animation
+
+Camera
+
+Effects
+
+Timing
+
+Only media changes.
+
+---
+
+# Capture Gallery
+
+Dedicated gallery.
+
+Sections:
+
+Recordings
+
+Screenshots
+
+Imported Files
+
+Favorites
+
+Recent
+
+---
+
+Each card displays:
+
+Preview
+
+Filename
+
+Resolution
+
+Duration
+
+Tags
+
+Created
+
+---
+
+# Search
+
+Search by:
+
+Filename
+
+Tags
+
+Date
+
+Resolution
+
+Duration
+
+---
+
+# Bulk Actions
+
+Select multiple.
+
+Delete
+
+Duplicate
+
+Export
+
+Add To Scene
+
+Move Folder
+
+Favorite
+
+---
+
+# Recording Settings
+
+Settings page.
+
+Default:
+
+Countdown
+
+Microphone
+
+Resolution
+
+Frame Rate
+
+Cursor
+
+Click Animation
+
+Output Format
+
+Auto Import
+
+Auto Trim
+
+Auto Save
+
+---
+
+# Browser Permissions
+
+Handle browser permissions gracefully.
+
+Show clear instructions if:
+
+Microphone denied
+
+Screen denied
+
+Camera denied
+
+Provide retry button.
+
+Never crash.
+
+---
+
+# Performance Goals
+
+Recording should:
+
+Remain responsive.
+
+Avoid dropped frames where possible.
+
+Support long recordings.
+
+Display recording health.
+
+---
+
+# Acceptance Criteria
+
+Base44 should deliver:
+
+✅ Built-in screen recorder
+
+✅ Screenshot capture
+
+✅ Countdown system
+
+✅ Floating recording controls
+
+✅ Webcam overlay
+
+✅ Audio recording
+
+✅ Cursor effects
+
+✅ Recording preferences
+
+✅ Screenshot editor
+
+✅ Video trimming
+
+✅ Video splitting
+
+✅ Video cropping
+
+✅ Frame extraction
+
+✅ Media Manager
+
+✅ Capture Gallery
+
+✅ Local media storage
+
+✅ Automatic import into projects
+
+✅ Browser permission handling
+
+---
+
+## MotionMock Studio – Product Requirements Document (PRD)
+
+# Part 3 – Device Mockup Engine, Scene Builder, Camera System & Background Engine
+
+---
+
+# Module Overview
+
+Build the core visual engine of MotionMock Studio.
+
+This module allows users to place screenshots or screen recordings into realistic device mockups, arrange multiple devices in a scene, customize the environment, control a virtual camera, and create professional showcase compositions.
+
+The device engine should be fully interactive, allowing every element to be repositioned, animated, grouped, and edited.
+
+---
+
+# Goals
+
+Users should be able to:
+
+* Add realistic device mockups
+* Insert screenshots or videos into device screens
+* Replace screen content without rebuilding scenes
+* Build scenes containing multiple devices
+* Arrange devices automatically or manually
+* Customize backgrounds
+* Control a virtual camera
+* Add lighting
+* Save reusable scene presets
+
+---
+
+# Device Engine
+
+Create a reusable Device Engine.
+
+Every device is an editable object with configurable properties.
+
+Supported device categories:
+
+* Smartphones
+* Tablets
+* Laptops
+* Desktop Monitors
+* Smart Watches
+* Foldable Phones
+* Generic Browser Window
+* Generic Application Window
+
+Each device should be rendered as a reusable component.
+
+---
+
+# Device Library
+
+Create a searchable Device Library.
+
+Display devices as cards with:
+
+* Thumbnail
+* Name
+* Category
+* Orientation
+* Recently Used indicator
+* Favorite toggle
+
+Categories:
+
+* Phones
+* Tablets
+* Laptops
+* Desktop
+* Browser
+* Watch
+* Custom Frames
+
+Allow:
+
+* Search
+* Filter
+* Sort
+* Favorites
+* Recently Used
+
+---
+
+# Device Properties
+
+Every device supports:
+
+General
+
+* Name
+* Lock
+* Hide
+* Duplicate
+
+Transform
+
+* Position X
+* Position Y
+* Position Z
+
+Rotation
+
+* X
+* Y
+* Z
+
+Scale
+
+Width
+
+Height
+
+Uniform Scale
+
+Opacity
+
+Visibility
+
+---
+
+# Screen Properties
+
+Each mockup contains a screen layer.
+
+Allow:
+
+Replace Media
+
+Fit
+
+Fill
+
+Contain
+
+Cover
+
+Stretch
+
+Crop
+
+Manual Offset
+
+Zoom
+
+Brightness
+
+Contrast
+
+Saturation
+
+Hue
+
+Tint
+
+Sharpness
+
+Border Radius
+
+---
+
+# Replace Screen
+
+Replacing media must never remove:
+
+Animations
+
+Camera
+
+Scene Position
+
+Lighting
+
+Effects
+
+Timeline
+
+Only the screen content changes.
+
+---
+
+# Screen Content
+
+Allow inserting:
+
+PNG
+
+JPG
+
+WEBP
+
+SVG
+
+MP4
+
+MOV
+
+GIF
+
+WEBM
+
+Live Screen Recording
+
+---
+
+# Smart Detection
+
+Automatically detect:
+
+Portrait screenshot
+
+Landscape screenshot
+
+Video
+
+Transparent image
+
+Animated GIF
+
+Browser capture
+
+Scale media automatically.
+
+---
+
+# Device Materials
+
+Each mockup supports:
+
+Matte
+
+Glossy
+
+Aluminum
+
+Titanium
+
+Plastic
+
+Glass
+
+Custom Material
+
+---
+
+Adjustable properties:
+
+Reflection
+
+Metalness
+
+Roughness
+
+Shadow Strength
+
+Glass Tint
+
+Edge Glow
+
+Screen Reflection
+
+Ambient Reflection
+
+---
+
+# Device Colors
+
+Allow:
+
+Black
+
+White
+
+Silver
+
+Gray
+
+Blue
+
+Gold
+
+Midnight
+
+Custom Color
+
+---
+
+# Device Shadows
+
+Properties:
+
+Shadow Color
+
+Opacity
+
+Distance
+
+Blur
+
+Spread
+
+Angle
+
+Softness
+
+---
+
+# Reflections
+
+Support:
+
+Disabled
+
+Subtle
+
+Medium
+
+Strong
+
+Custom
+
+Adjust:
+
+Opacity
+
+Angle
+
+Blur
+
+Brightness
+
+---
+
+# Device Orientation
+
+Portrait
+
+Landscape
+
+Reverse Portrait
+
+Reverse Landscape
+
+Free Rotation
+
+---
+
+# Device States
+
+Each device may be:
+
+Unlocked
+
+Locked
+
+Hidden
+
+Solo
+
+Grouped
+
+Pinned
+
+---
+
+# Scene Builder
+
+Every project contains one or more scenes.
+
+Each scene is independent.
+
+A scene contains:
+
+Background
+
+Camera
+
+Devices
+
+Text
+
+Shapes
+
+Effects
+
+Audio
+
+Lighting
+
+Timeline
+
+---
+
+# Scene Panel
+
+Display scene cards.
+
+Each card contains:
+
+Thumbnail
+
+Scene Name
+
+Duration
+
+Transition
+
+Number of Objects
+
+Number of Devices
+
+Scene Color Label
+
+---
+
+Allow:
+
+Duplicate
+
+Rename
+
+Delete
+
+Reorder
+
+Lock
+
+Hide
+
+Favorite
+
+---
+
+# Add Scene
+
+When adding a new scene allow:
+
+Blank Scene
+
+Duplicate Current
+
+Template Scene
+
+Import Scene
+
+---
+
+# Multi Device Scenes
+
+Support unlimited devices.
+
+Recommended presets:
+
+Single Device
+
+Dual Device
+
+Triple Device
+
+Grid
+
+Comparison
+
+Floating Cards
+
+Hero Layout
+
+Carousel
+
+Stack
+
+Fan
+
+Mosaic
+
+Split Screen
+
+---
+
+# Auto Layout Engine
+
+Provide one-click layouts.
+
+Examples:
+
+Centered
+
+Left Hero
+
+Right Hero
+
+Two Column
+
+Three Column
+
+Grid
+
+Circular
+
+Floating
+
+Random
+
+Stack
+
+Vertical
+
+Horizontal
+
+---
+
+Spacing controls:
+
+Gap
+
+Margin
+
+Alignment
+
+Distribution
+
+Padding
+
+---
+
+# Guides
+
+Display smart guides.
+
+Snap:
+
+Center
+
+Edges
+
+Object
+
+Grid
+
+Margins
+
+Canvas
+
+---
+
+# Alignment Tools
+
+Align Left
+
+Align Right
+
+Center Horizontally
+
+Center Vertically
+
+Top
+
+Bottom
+
+Equal Spacing
+
+Equal Size
+
+---
+
+# Layers Panel
+
+Objects appear in a layer tree.
+
+Allow:
+
+Rename
+
+Reorder
+
+Nest
+
+Group
+
+Ungroup
+
+Lock
+
+Hide
+
+Duplicate
+
+Delete
+
+Search
+
+---
+
+# Grouping
+
+Users can group:
+
+Devices
+
+Text
+
+Shapes
+
+Images
+
+Effects
+
+Groups behave as single objects.
+
+---
+
+# Background Engine
+
+Background types:
+
+Solid Color
+
+Gradient
+
+Mesh Gradient
+
+Animated Gradient
+
+Image
+
+Video
+
+Glass
+
+Noise
+
+Grid
+
+Dots
+
+Abstract Shapes
+
+Aurora
+
+Waves
+
+Particles
+
+Minimal Pattern
+
+---
+
+# Background Controls
+
+Opacity
+
+Blur
+
+Brightness
+
+Contrast
+
+Hue
+
+Saturation
+
+Noise Amount
+
+Gradient Angle
+
+Gradient Colors
+
+Image Position
+
+Scale
+
+Repeat
+
+Animation Speed
+
+---
+
+# Shape Library
+
+Provide reusable shapes.
+
+Rectangle
+
+Rounded Rectangle
+
+Circle
+
+Triangle
+
+Polygon
+
+Diamond
+
+Blob
+
+Line
+
+Arrow
+
+Star
+
+Hexagon
+
+Ring
+
+---
+
+Properties:
+
+Fill
+
+Stroke
+
+Shadow
+
+Gradient
+
+Opacity
+
+Blur
+
+Rotation
+
+Corner Radius
+
+---
+
+# Decorative Elements
+
+Allow adding:
+
+Glow Orbs
+
+Glass Cards
+
+Gradient Blobs
+
+Floating Lines
+
+Icons
+
+Particles
+
+Light Rays
+
+Noise Texture
+
+Grid Overlay
+
+---
+
+# Camera Engine
+
+Every scene has one virtual camera.
+
+Camera properties:
+
+Position
+
+Rotation
+
+Zoom
+
+Field of View
+
+Perspective
+
+Orthographic Mode
+
+Focus Distance
+
+Depth of Field
+
+Near Plane
+
+Far Plane
+
+---
+
+# Camera Presets
+
+Front
+
+Top
+
+Bottom
+
+Left
+
+Right
+
+Isometric
+
+Perspective
+
+Close-up
+
+Wide
+
+Hero
+
+Product
+
+---
+
+# Camera Movement
+
+Allow keyframed movement.
+
+Support:
+
+Pan
+
+Zoom
+
+Orbit
+
+Rotate
+
+Dolly
+
+Truck
+
+Pedestal
+
+Tilt
+
+---
+
+# Camera Targets
+
+Camera can follow:
+
+Selected Device
+
+Group
+
+Text
+
+Object
+
+Custom Path
+
+---
+
+# Camera Path Editor
+
+Users can create:
+
+Bezier Path
+
+Linear Path
+
+Circular Path
+
+Free Path
+
+Preview path live.
+
+---
+
+# Lighting Engine
+
+Support multiple light types.
+
+Ambient
+
+Directional
+
+Spot
+
+Point
+
+Area
+
+HDR Environment
+
+---
+
+Each light supports:
+
+Intensity
+
+Color
+
+Temperature
+
+Range
+
+Shadow Quality
+
+Softness
+
+Angle
+
+Decay
+
+---
+
+# Lighting Presets
+
+Studio
+
+Soft
+
+Product
+
+Bright
+
+Moody
+
+Dark
+
+Minimal
+
+Gradient
+
+Sunset
+
+Night
+
+---
+
+# Environment
+
+Provide environmental controls.
+
+Background Blur
+
+Fog
+
+Ambient Light
+
+Bloom
+
+Reflection Strength
+
+Environment Rotation
+
+---
+
+# Scene Presets
+
+Ship with ready-made layouts.
+
+Examples:
+
+Hero Intro
+
+App Showcase
+
+Feature Reveal
+
+Dashboard Tour
+
+Analytics Display
+
+Pricing Screen
+
+Comparison Scene
+
+Testimonial Layout
+
+Call To Action
+
+Outro
+
+Minimal Presentation
+
+Floating UI
+
+Website Showcase
+
+Browser Window
+
+Laptop Hero
+
+Phone Stack
+
+Tablet Showcase
+
+---
+
+# Reusable Components
+
+Users can save:
+
+Device Layouts
+
+Camera Angles
+
+Backgrounds
+
+Lighting Setups
+
+Entire Scenes
+
+These appear in a personal library.
+
+---
+
+# Performance
+
+The editor should maintain smooth interaction while displaying multiple devices and layered effects. Rendering should remain responsive, with object manipulation feeling immediate.
+
+---
+
+# Acceptance Criteria
+
+Base44 should deliver:
+
+✅ Complete Device Library
+
+✅ Editable Device Mockups
+
+✅ Screen Replacement
+
+✅ Multi-Device Layouts
+
+✅ Auto Layout Engine
+
+✅ Layer Panel
+
+✅ Grouping System
+
+✅ Background Engine
+
+✅ Shape Library
+
+✅ Decorative Elements
+
+✅ Camera Engine
+
+✅ Camera Animation
+
+✅ Camera Path Editor
+
+✅ Lighting Engine
+
+✅ Environment Controls
+
+✅ Scene Presets
+
+✅ Reusable Scene Components
+
+---
+
+## MotionMock Studio – Product Requirements Document (PRD)
+
+# Part 4 – Professional Timeline, Animation Engine, Keyframes & Motion System
+
+---
+
+# Module Overview
+
+Build a professional, non-linear animation and timeline system that allows users to create smooth, high-quality promotional videos. The timeline should feel familiar to users of modern video editing and motion graphics applications while remaining simple enough for beginners.
+
+Every object in MotionMock Studio should be animatable using keyframes, presets, and transitions.
+
+---
+
+# Goals
+
+Users should be able to:
+
+* Create multi-scene timelines.
+* Animate any object.
+* Control animation timing.
+* Apply reusable motion presets.
+* Edit keyframes visually.
+* Preview animations in real time.
+* Add transitions between scenes.
+* Copy and paste animations.
+* Save custom animation presets.
+
+---
+
+# Timeline Layout
+
+The bottom section of the application is the Timeline.
+
+It contains:
+
+* Timeline Toolbar
+* Time Ruler
+* Track List
+* Clip Area
+* Playhead
+* Zoom Controls
+* Playback Controls
+
+The timeline should be resizable vertically.
+
+---
+
+# Timeline Toolbar
+
+Include:
+
+* Play
+* Pause
+* Stop
+* Previous Frame
+* Next Frame
+* Previous Keyframe
+* Next Keyframe
+* Zoom In
+* Zoom Out
+* Fit Timeline
+* Add Track
+* Add Marker
+* Snap Toggle
+* Magnet Toggle
+* Ripple Edit Toggle
+
+---
+
+# Time Ruler
+
+Display:
+
+* Frames
+* Seconds
+* Minutes
+
+Support:
+
+* Zoom
+* Scroll
+* Frame snapping
+* Time markers
+* Playhead dragging
+
+---
+
+# Tracks
+
+Support multiple track types:
+
+* Scene Track
+* Device Track
+* Video Track
+* Image Track
+* Text Track
+* Shape Track
+* Camera Track
+* Audio Track
+* Effect Track
+* Lighting Track
+
+Tracks can be:
+
+* Locked
+* Hidden
+* Renamed
+* Reordered
+* Color coded
+
+---
+
+# Clips
+
+Every timeline item is represented as a clip.
+
+Each clip supports:
+
+* Move
+* Resize
+* Duplicate
+* Delete
+* Trim
+* Split
+* Lock
+* Mute (audio)
+* Disable
+* Copy
+* Paste
+
+---
+
+# Playhead
+
+Allow:
+
+* Drag
+* Click to jump
+* Frame stepping
+* Snapping
+* Loop playback
+
+Display current:
+
+* Timecode
+* Frame number
+
+---
+
+# Timeline Zoom
+
+Users can zoom using:
+
+* Slider
+* Mouse Wheel
+* Keyboard Shortcut
+* Pinch Gesture
+
+Support frame-level precision.
+
+---
+
+# Timeline Markers
+
+Users can add markers.
+
+Marker types:
+
+* Comment
+* Reminder
+* Export Point
+* Chapter
+* Favorite
+
+Allow color labels.
+
+---
+
+# Animation Engine
+
+Every object is animatable.
+
+Supported properties:
+
+Position X
+
+Position Y
+
+Position Z
+
+Rotation X
+
+Rotation Y
+
+Rotation Z
+
+Scale
+
+Width
+
+Height
+
+Opacity
+
+Blur
+
+Brightness
+
+Contrast
+
+Hue
+
+Saturation
+
+Tint
+
+Shadow
+
+Reflection
+
+Glow
+
+Corner Radius
+
+Border
+
+Mask Position
+
+Camera Position
+
+Light Intensity
+
+Background Properties
+
+---
+
+# Keyframes
+
+Every animatable property uses keyframes.
+
+Users can:
+
+* Add
+* Move
+* Delete
+* Duplicate
+* Copy
+* Paste
+* Multi-select
+
+Display keyframes as diamonds.
+
+---
+
+# Keyframe Types
+
+Support:
+
+* Linear
+* Ease In
+* Ease Out
+* Ease In-Out
+* Hold
+* Bounce
+* Elastic
+* Custom Curve
+
+---
+
+# Curve Editor
+
+Provide a Graph Editor.
+
+Allow editing:
+
+* Velocity
+* Acceleration
+* Custom Bezier Curves
+
+Users should be able to drag handles visually.
+
+---
+
+# Motion Presets
+
+Ship with a library of presets.
+
+Entrance
+
+* Fade In
+* Slide Up
+* Slide Down
+* Slide Left
+* Slide Right
+* Scale Up
+* Zoom In
+* Flip In
+* Rotate In
+* Pop In
+* Grow
+* Bounce In
+* Float Up
+* Blur Reveal
+
+Exit
+
+* Fade Out
+* Slide Away
+* Scale Down
+* Zoom Out
+* Rotate Out
+* Blur Away
+* Shrink
+* Drop
+* Flip Out
+
+Loop
+
+* Float
+* Pulse
+* Bob
+* Wiggle
+* Spin
+* Orbit
+* Breathing
+* Bounce
+* Hover
+
+Attention
+
+* Shake
+* Flash
+* Glow
+* Pulse Ring
+* Bounce
+* Swing
+* Rubber Band
+
+---
+
+# Animation Controls
+
+Each preset exposes:
+
+* Duration
+* Delay
+* Speed
+* Direction
+* Distance
+* Rotation Amount
+* Opacity
+* Blur Amount
+* Scale Amount
+* Repeat
+* Loop
+* Reverse
+* Stagger
+
+---
+
+# Stagger Animations
+
+For multiple selected objects:
+
+Allow:
+
+* Sequential
+* Reverse Sequential
+* Random
+* Center Out
+* Outside In
+
+Control:
+
+* Delay between items
+* Direction
+
+---
+
+# Copy Animation
+
+Users can:
+
+Copy Animation
+
+Paste Animation
+
+Paste Timing
+
+Paste Effects
+
+Paste Keyframes
+
+---
+
+# Save Animation Preset
+
+Users can save custom presets.
+
+Store:
+
+* Name
+* Category
+* Thumbnail
+* Tags
+
+Allow editing and deletion.
+
+---
+
+# Camera Animation
+
+Camera supports keyframes.
+
+Animate:
+
+* Position
+* Rotation
+* Zoom
+* Focus
+* Depth of Field
+
+---
+
+# Device Animation
+
+Animate:
+
+* Float
+* Spin
+* Tilt
+* Rotate
+* Swing
+* Scale
+* Hover
+* Bounce
+
+---
+
+# Text Animation
+
+Support:
+
+* Typewriter
+* Character Reveal
+* Word Reveal
+* Fade
+* Slide
+* Bounce
+* Blur Reveal
+* Scale
+* Rotate
+
+Options:
+
+* Per Character
+* Per Word
+* Per Line
+
+---
+
+# Shape Animation
+
+Animate:
+
+* Draw
+* Scale
+* Morph
+* Rotate
+* Fade
+* Grow
+* Wipe
+
+---
+
+# Mask Animation
+
+Support:
+
+* Reveal
+* Wipe
+* Circle Expand
+* Rectangle Expand
+* Shape Reveal
+* Gradient Reveal
+
+---
+
+# Transition Engine
+
+Transitions occur between scenes.
+
+Built-in transitions:
+
+* Cut
+* Fade
+* Cross Dissolve
+* Slide Left
+* Slide Right
+* Slide Up
+* Slide Down
+* Zoom
+* Push
+* Wipe
+* Spin
+* Flip
+* Blur
+* Flash
+* Morph
+
+---
+
+# Transition Controls
+
+Allow:
+
+* Duration
+* Direction
+* Blur Amount
+* Easing
+* Overlap
+* Sound Effect
+
+---
+
+# Timeline Snapping
+
+Snap to:
+
+* Frames
+* Clips
+* Keyframes
+* Markers
+* Scene Boundaries
+
+Allow toggling snapping.
+
+---
+
+# Ripple Editing
+
+When enabled:
+
+Moving or trimming clips automatically shifts following clips to preserve spacing.
+
+---
+
+# Multi-Selection
+
+Users can select multiple:
+
+* Clips
+* Keyframes
+* Tracks
+* Objects
+
+Operations:
+
+* Move
+* Delete
+* Duplicate
+* Group
+* Align Timing
+
+---
+
+# Loop Regions
+
+Users can define loop playback areas.
+
+Display:
+
+* Loop Start
+* Loop End
+
+Loop preview continuously.
+
+---
+
+# Playback
+
+Support:
+
+* 0.25x
+* 0.5x
+* 1x
+* 1.5x
+* 2x
+
+Display dropped frame indicator if necessary.
+
+---
+
+# Timeline Search
+
+Search:
+
+* Scene Name
+* Clip Name
+* Track
+* Object
+* Marker
+
+---
+
+# Timeline History
+
+Maintain undo/redo for:
+
+* Keyframes
+* Track edits
+* Clip edits
+* Timing changes
+* Preset application
+
+Support at least 100 history steps.
+
+---
+
+# Animation Preview
+
+Preview should update instantly.
+
+Changing a property should reflect immediately in the canvas.
+
+No manual refresh required.
+
+---
+
+# Performance
+
+Maintain smooth playback and editing even with multiple animated devices, text layers, and effects. Optimize rendering to minimize dropped frames during preview.
+
+---
+
+# Acceptance Criteria
+
+Base44 should deliver:
+
+* Professional multi-track timeline
+* Frame-accurate editing
+* Playhead and ruler
+* Keyframe animation system
+* Curve editor
+* Animation preset library
+* Transition engine
+* Camera animation
+* Device animation
+* Text animation
+* Shape animation
+* Mask animation
+* Copy/paste animations
+* Save custom animation presets
+* Snapping
+* Ripple editing
+* Loop regions
+* Playback speed controls
+* Timeline search
+* Undo/redo support
+
+---
+
+## MotionMock Studio – Product Requirements Document (PRD)
+
+# Part 5 – Text Engine, Asset Library, Audio Engine, Visual Effects & Branding System
+
+---
+
+# Module Overview
+
+Build a professional creative toolkit that allows users to add typography, graphics, icons, logos, music, sound effects, and visual enhancements to their promotional videos.
+
+The goal is to allow a user to create a complete marketing video without needing another design or video editing application.
+
+All assets should be editable, reusable, searchable, and fully compatible with the timeline and animation system from Part 4.
+
+---
+
+# Primary Goals
+
+Users should be able to:
+
+* Add professional text.
+* Upload logos.
+* Add icons.
+* Insert SVG graphics.
+* Add music.
+* Add sound effects.
+* Add voice narration.
+* Apply cinematic visual effects.
+* Save reusable branding kits.
+* Organize assets efficiently.
+
+---
+
+# Text Engine
+
+Create a complete typography engine.
+
+Text objects should behave like every other editable object.
+
+Support:
+
+* Headings
+* Paragraphs
+* Labels
+* Captions
+* Buttons
+* Callouts
+* Quotes
+* Statistics
+* Feature Lists
+* Pricing Tables
+* CTA Buttons
+
+---
+
+# Text Properties
+
+Allow editing:
+
+Content
+
+Font
+
+Font Family
+
+Weight
+
+Italic
+
+Underline
+
+Strikethrough
+
+Font Size
+
+Line Height
+
+Letter Spacing
+
+Word Spacing
+
+Alignment
+
+Text Transform
+
+Opacity
+
+Rotation
+
+Scale
+
+Color
+
+Gradient
+
+Shadow
+
+Glow
+
+Outline
+
+Background
+
+Padding
+
+Corner Radius
+
+---
+
+# Text Styles
+
+Provide reusable styles.
+
+Examples:
+
+Hero Title
+
+Subtitle
+
+Section Title
+
+Small Label
+
+Body Text
+
+Button
+
+Badge
+
+Feature Title
+
+Feature Description
+
+Statistic
+
+Quote
+
+Caption
+
+Footer
+
+---
+
+# Text Effects
+
+Support:
+
+Shadow
+
+Glow
+
+Outline
+
+Glass
+
+Gradient Fill
+
+Gradient Stroke
+
+Neon
+
+Blur
+
+Inner Shadow
+
+Outer Shadow
+
+Reflection
+
+Emboss
+
+Soft Glow
+
+---
+
+# Text Animation
+
+Integrate with Part 4 animation system.
+
+Add dedicated presets:
+
+Character Reveal
+
+Word Reveal
+
+Line Reveal
+
+Typewriter
+
+Fade
+
+Slide
+
+Bounce
+
+Rotate
+
+Scale
+
+Blur Reveal
+
+Elastic
+
+Wave
+
+Jitter
+
+Pop
+
+Glow Pulse
+
+Typing Cursor
+
+Options:
+
+Animate by
+
+Character
+
+Word
+
+Line
+
+Entire Object
+
+---
+
+# Dynamic Counters
+
+Allow animated numbers.
+
+Examples:
+
+Users
+
+Revenue
+
+Downloads
+
+Percentage
+
+Duration
+
+Currency
+
+Support:
+
+Counting Up
+
+Counting Down
+
+Decimals
+
+Prefixes
+
+Suffixes
+
+---
+
+# Asset Library
+
+Create a professional asset management system.
+
+Categories:
+
+Images
+
+Videos
+
+Logos
+
+Icons
+
+SVG
+
+Shapes
+
+Backgrounds
+
+Audio
+
+Music
+
+Voiceovers
+
+Sound Effects
+
+Fonts
+
+Templates
+
+Brand Kits
+
+---
+
+# Asset Browser
+
+Display:
+
+Grid View
+
+List View
+
+Preview
+
+Thumbnail
+
+Metadata
+
+Search
+
+Filters
+
+Sorting
+
+Favorites
+
+Collections
+
+Recent
+
+---
+
+# Search
+
+Search by:
+
+Filename
+
+Category
+
+Tags
+
+Date
+
+Color
+
+File Type
+
+Size
+
+Orientation
+
+Resolution
+
+---
+
+# Asset Upload
+
+Support:
+
+PNG
+
+JPG
+
+JPEG
+
+WEBP
+
+SVG
+
+GIF
+
+MP4
+
+MOV
+
+WEBM
+
+MP3
+
+WAV
+
+OGG
+
+TTF
+
+OTF
+
+ZIP (Brand Kits)
+
+---
+
+Automatically generate:
+
+Thumbnail
+
+Metadata
+
+Dimensions
+
+Duration
+
+Dominant Colors
+
+Aspect Ratio
+
+Orientation
+
+---
+
+# Collections
+
+Allow users to create folders.
+
+Examples:
+
+Brand Assets
+
+Logos
+
+Icons
+
+Screenshots
+
+Backgrounds
+
+Music
+
+Campaign A
+
+Campaign B
+
+Favorites
+
+---
+
+# Asset Actions
+
+Rename
+
+Duplicate
+
+Delete
+
+Move
+
+Favorite
+
+Preview
+
+Replace
+
+Tag
+
+Download
+
+Export
+
+---
+
+# Icon Library
+
+Ship with a built-in vector icon library.
+
+Categories:
+
+Interface
+
+Commerce
+
+Finance
+
+Education
+
+Technology
+
+Medical
+
+Travel
+
+Food
+
+Social
+
+Business
+
+Communication
+
+Security
+
+Analytics
+
+---
+
+Icons remain editable.
+
+Support:
+
+Color
+
+Stroke
+
+Size
+
+Shadow
+
+Opacity
+
+Gradient
+
+---
+
+# Shape Library
+
+Provide reusable vector shapes.
+
+Rectangle
+
+Rounded Rectangle
+
+Circle
+
+Ellipse
+
+Triangle
+
+Arrow
+
+Diamond
+
+Hexagon
+
+Polygon
+
+Blob
+
+Speech Bubble
+
+Ribbon
+
+Star
+
+Line
+
+---
+
+# Brand Kit
+
+Allow users to save brand identities.
+
+Each Brand Kit contains:
+
+Logo
+
+Primary Color
+
+Secondary Color
+
+Accent Color
+
+Fonts
+
+Button Style
+
+Background Style
+
+Preferred Device Color
+
+Preferred Animation Style
+
+Default CTA
+
+---
+
+Users can create unlimited Brand Kits.
+
+---
+
+# Logo Management
+
+Upload:
+
+SVG
+
+PNG
+
+WEBP
+
+Allow:
+
+Transparent logos
+
+Dark version
+
+Light version
+
+Monochrome version
+
+Automatically remove excess padding.
+
+---
+
+# Audio Engine
+
+Provide a multi-track audio editor.
+
+Tracks:
+
+Background Music
+
+Voiceover
+
+Microphone
+
+System Audio
+
+Sound Effects
+
+Ambient Audio
+
+---
+
+# Audio Controls
+
+Volume
+
+Mute
+
+Solo
+
+Fade In
+
+Fade Out
+
+Trim
+
+Loop
+
+Playback Speed
+
+Normalize
+
+Balance
+
+EQ (basic)
+
+Noise Reduction
+
+---
+
+# Background Music
+
+Allow:
+
+Import Music
+
+Loop
+
+Auto Fade
+
+Adjust Volume
+
+Preview
+
+Favorite
+
+---
+
+# Sound Effects
+
+Provide categories:
+
+Click
+
+Pop
+
+Swipe
+
+Notification
+
+Whoosh
+
+Typing
+
+Success
+
+Error
+
+UI Sounds
+
+Transitions
+
+Impact
+
+Ambient
+
+---
+
+# Voiceover
+
+Users can:
+
+Import narration
+
+Record narration directly
+
+Trim narration
+
+Split narration
+
+Replace narration
+
+Sync narration to scenes
+
+---
+
+# Waveform Editor
+
+Display waveform.
+
+Allow:
+
+Trim
+
+Split
+
+Move
+
+Zoom
+
+Markers
+
+Loop
+
+---
+
+# Audio Ducking
+
+Automatically reduce music volume when narration is playing.
+
+Allow adjustment:
+
+Duck Amount
+
+Fade Speed
+
+Recovery Speed
+
+---
+
+# Effects Library
+
+Provide reusable visual effects.
+
+Categories:
+
+Glow
+
+Bloom
+
+Glass
+
+Reflection
+
+Noise
+
+Film Grain
+
+Lens Flare
+
+Chromatic Aberration
+
+Motion Blur
+
+Vignette
+
+Drop Shadow
+
+Long Shadow
+
+Color Overlay
+
+Gradient Overlay
+
+Light Rays
+
+Fog
+
+Particles
+
+Bokeh
+
+Glow Lines
+
+Soft Focus
+
+---
+
+# Effect Controls
+
+Each effect exposes:
+
+Opacity
+
+Intensity
+
+Blend Mode
+
+Radius
+
+Color
+
+Direction
+
+Animation
+
+Visibility
+
+---
+
+# Color Grading
+
+Provide controls:
+
+Exposure
+
+Contrast
+
+Highlights
+
+Shadows
+
+Whites
+
+Blacks
+
+Temperature
+
+Tint
+
+Saturation
+
+Vibrance
+
+Gamma
+
+Curves (basic)
+
+---
+
+# Filters
+
+Ship with presets.
+
+Clean
+
+Minimal
+
+Bright
+
+Dark
+
+Corporate
+
+Warm
+
+Cool
+
+Modern
+
+Neon
+
+Vintage
+
+Monochrome
+
+Pastel
+
+Glass
+
+---
+
+# Overlay Library
+
+Provide overlays.
+
+Grid
+
+Noise
+
+Paper
+
+Dust
+
+Gradient
+
+Light Leak
+
+Scanlines
+
+Halftone
+
+Glass
+
+---
+
+# Callout Components
+
+Allow users to create annotations.
+
+Arrow
+
+Pointer
+
+Highlight Box
+
+Feature Label
+
+Number Badge
+
+Speech Bubble
+
+Tooltip
+
+Pulse Ring
+
+Animated Dot
+
+---
+
+# CTA Components
+
+Ready-made buttons.
+
+Examples:
+
+Download Now
+
+Get Started
+
+Try Free
+
+Learn More
+
+Visit Website
+
+Book Demo
+
+Watch Video
+
+Custom CTA
+
+---
+
+# Social Components
+
+Include:
+
+Social Icons
+
+App Store Badge
+
+Google Play Badge
+
+QR Code Placeholder
+
+Website URL
+
+Email
+
+Phone
+
+---
+
+# QR Code Generator
+
+Allow users to generate QR codes.
+
+Input:
+
+Website
+
+App Store Link
+
+Google Play Link
+
+Custom URL
+
+Customize:
+
+Color
+
+Background
+
+Rounded Corners
+
+Logo
+
+Margin
+
+---
+
+# Reusable Components
+
+Users can save:
+
+Text Styles
+
+Effect Presets
+
+Brand Kits
+
+Audio Presets
+
+CTA Components
+
+Callout Components
+
+---
+
+# Smart Replace
+
+If a logo or brand color changes, allow updating all instances throughout the project automatically.
+
+---
+
+# Asset Optimization
+
+Automatically optimize imported assets for editing while preserving the originals. Generate thumbnails and metadata in the background to keep the interface responsive.
+
+---
+
+# Acceptance Criteria
+
+Base44 should deliver:
+
+* Professional Text Engine
+* Typography Styles
+* Animated Text Presets
+* Dynamic Counters
+* Asset Library
+* Searchable Asset Browser
+* Collections & Folders
+* Built-in Icon Library
+* Shape Library
+* Brand Kit Manager
+* Logo Management
+* Multi-track Audio Engine
+* Voice Recording
+* Waveform Editor
+* Audio Ducking
+* Visual Effects Library
+* Color Grading
+* Filter Presets
+* Overlay Library
+* Callout Components
+* CTA Components
+* Social Components
+* QR Code Generator
+* Reusable Style & Brand Components
+* Smart Brand Replace
+
+---
+
+## MotionMock Studio – Product Requirements Document (PRD)
+
+# Part 6 – Export Engine, Rendering Pipeline, Template System, Project Management & Performance
+
+---
+
+# Module Overview
+
+Build a production-ready rendering and export system that allows users to generate high-quality videos from their projects. The export engine should be reliable, configurable, and optimized for smooth performance.
+
+This module also includes the template system, project management, autosave, local storage, performance optimization, and rendering queue.
+
+The goal is for users to complete an entire project—from recording to exporting—without leaving MotionMock Studio.
+
+---
+
+# Primary Goals
+
+Users should be able to:
+
+* Export projects in multiple formats.
+* Queue multiple exports.
+* Save and reopen projects.
+* Autosave progress.
+* Duplicate projects.
+* Save reusable templates.
+* Optimize playback performance.
+* Recover unsaved work after crashes.
+
+---
+
+# Export Center
+
+Add a dedicated **Export Center** to the sidebar.
+
+Display:
+
+* Current Export Queue
+* Recent Exports
+* Export History
+* Failed Exports
+* Export Presets
+* Storage Usage
+
+---
+
+# Export Dialog
+
+Clicking **Export** opens a modal.
+
+Fields:
+
+**File Name**
+
+**Output Folder**
+
+**Export Preset**
+
+**Resolution**
+
+* 720p
+* 1080p
+* 1440p
+* 2160p (4K)
+* Custom
+
+**Frame Rate**
+
+* 24 FPS
+* 30 FPS
+* 60 FPS
+
+**Format**
+
+* MP4 (H.264)
+* MOV
+* WEBM
+* GIF
+* PNG Image Sequence
+
+**Quality**
+
+* Draft
+* Standard
+* High
+* Ultra
+
+**Compression**
+
+* Low
+* Medium
+* High
+
+**Include Audio**
+
+Yes / No
+
+**Transparent Background (where supported)**
+
+**Start Export**
+
+**Cancel**
+
+---
+
+# Export Queue
+
+Support multiple export jobs.
+
+Each job displays:
+
+* Project Name
+* Progress Bar
+* Estimated Time Remaining
+* Resolution
+* Format
+* Status
+* Cancel Button
+* Retry Button
+
+Statuses:
+
+* Waiting
+* Preparing
+* Rendering
+* Encoding
+* Finalizing
+* Completed
+* Failed
+* Cancelled
+
+---
+
+# Rendering Pipeline
+
+Pipeline stages:
+
+1. Validate Project
+2. Load Assets
+3. Resolve Timeline
+4. Process Animations
+5. Render Frames
+6. Encode Video
+7. Mix Audio
+8. Apply Compression
+9. Generate Thumbnail
+10. Save Output
+
+Display progress throughout.
+
+---
+
+# Export Progress Window
+
+Show:
+
+Large Progress Bar
+
+Percentage
+
+Current Stage
+
+Estimated Remaining Time
+
+Frames Rendered
+
+Elapsed Time
+
+Output Resolution
+
+Output Format
+
+Cancel Export
+
+Run in Background
+
+---
+
+# Export Presets
+
+Provide built-in presets.
+
+Examples:
+
+YouTube Landscape (1080p)
+
+YouTube Shorts (1080×1920)
+
+Instagram Reel
+
+Instagram Story
+
+Instagram Post
+
+TikTok
+
+LinkedIn Video
+
+Facebook Feed
+
+Product Hunt
+
+App Store Preview
+
+Google Play Preview
+
+Website Hero
+
+Presentation
+
+GIF Preview
+
+Users can duplicate and customize presets.
+
+---
+
+# Batch Export
+
+Allow exporting multiple projects or scenes.
+
+Options:
+
+Entire Project
+
+Selected Scenes
+
+Current Scene
+
+All Templates
+
+Multiple Projects
+
+---
+
+# Scene Export
+
+Users can export:
+
+Single Scene
+
+Scene Range
+
+Loop Segment
+
+Current Frame
+
+Frame Range
+
+---
+
+# Image Export
+
+Support:
+
+PNG
+
+JPEG
+
+WEBP
+
+SVG (where applicable)
+
+Transparent PNG
+
+---
+
+# Animated GIF Export
+
+Allow:
+
+Resolution
+
+Frame Rate
+
+Loop
+
+Color Depth
+
+Dithering
+
+Quality
+
+---
+
+# Thumbnail Generator
+
+Automatically generate:
+
+Project Thumbnail
+
+Scene Thumbnail
+
+Export Thumbnail
+
+Allow users to override with a custom frame.
+
+---
+
+# Watermark
+
+Optional project watermark.
+
+Controls:
+
+Opacity
+
+Position
+
+Scale
+
+Padding
+
+Users can disable it by default.
+
+---
+
+# Compression
+
+Provide compression profiles.
+
+Lossless
+
+High Quality
+
+Balanced
+
+Small File
+
+Maximum Compression
+
+---
+
+# Autosave
+
+Autosave every few seconds.
+
+Display:
+
+Saving…
+
+Saved
+
+Unsaved Changes
+
+If saving fails:
+
+Display warning.
+
+Retry automatically.
+
+Never interrupt editing.
+
+---
+
+# Project Recovery
+
+If MotionMock Studio closes unexpectedly:
+
+On next launch display:
+
+Recover Project?
+
+Restore Autosave?
+
+Discard Changes?
+
+Show recovery timestamp.
+
+---
+
+# Local Storage
+
+Store locally using IndexedDB.
+
+Persist:
+
+Projects
+
+Scenes
+
+Assets
+
+Templates
+
+Brand Kits
+
+Preferences
+
+Recent Files
+
+Export History
+
+Custom Presets
+
+---
+
+# Project Browser
+
+Display projects as cards.
+
+Each card shows:
+
+Thumbnail
+
+Project Name
+
+Created Date
+
+Last Modified
+
+Resolution
+
+Duration
+
+File Size
+
+Orientation
+
+Number of Scenes
+
+---
+
+Project actions:
+
+Open
+
+Rename
+
+Duplicate
+
+Delete
+
+Export
+
+Favorite
+
+Archive
+
+---
+
+# Recent Projects
+
+Display last 20 projects.
+
+Sort by:
+
+Last Opened
+
+Last Modified
+
+Alphabetical
+
+Newest
+
+Oldest
+
+---
+
+# Project Templates
+
+Users can save any project as a reusable template.
+
+Template includes:
+
+Scene Layouts
+
+Devices
+
+Animations
+
+Camera
+
+Lighting
+
+Backgrounds
+
+Text Styles
+
+Effects
+
+Brand Kit (optional)
+
+---
+
+# Template Library
+
+Built-in categories:
+
+Product Showcase
+
+SaaS Demo
+
+Mobile App
+
+Desktop App
+
+Website
+
+Dashboard
+
+Analytics
+
+Presentation
+
+Marketing
+
+Minimal
+
+Technology
+
+Startup
+
+Corporate
+
+Social Media
+
+---
+
+Each template card displays:
+
+Preview
+
+Category
+
+Duration
+
+Difficulty
+
+Orientation
+
+---
+
+# Duplicate Project
+
+Duplicating creates a completely independent copy.
+
+Duplicate:
+
+Scenes
+
+Animations
+
+Assets
+
+Timeline
+
+Effects
+
+---
+
+# Project Archive
+
+Archived projects are hidden from the main dashboard but remain recoverable.
+
+Support:
+
+Restore
+
+Delete Permanently
+
+---
+
+# Version History (Local)
+
+Automatically create restore points.
+
+Users can restore previous versions.
+
+Keep configurable history length.
+
+---
+
+# Asset Optimization
+
+Optimize imported media for preview while preserving originals.
+
+Generate:
+
+Preview Resolution
+
+Thumbnail
+
+Metadata
+
+Waveforms
+
+Proxy Media (optional)
+
+---
+
+# Lazy Loading
+
+Only load:
+
+Visible assets
+
+Visible timeline clips
+
+Visible previews
+
+This improves responsiveness.
+
+---
+
+# Background Rendering
+
+Heavy rendering tasks should occur in the background whenever possible to keep the UI responsive.
+
+---
+
+# GPU Acceleration
+
+Where available:
+
+Use hardware acceleration for:
+
+Canvas Rendering
+
+Animations
+
+Video Playback
+
+Image Processing
+
+---
+
+# Memory Management
+
+Unload unused:
+
+Textures
+
+Images
+
+Videos
+
+Audio Buffers
+
+Cache intelligently.
+
+---
+
+# Performance Settings
+
+Provide user options:
+
+Preview Quality
+
+Low
+
+Medium
+
+High
+
+Ultra
+
+Playback Resolution
+
+25%
+
+50%
+
+75%
+
+100%
+
+Enable Proxy Media
+
+Enable GPU Acceleration
+
+Maximum Memory Usage
+
+---
+
+# Notification System
+
+Show unobtrusive notifications for:
+
+Export Complete
+
+Export Failed
+
+Project Saved
+
+Recovery Available
+
+Import Finished
+
+Template Saved
+
+Asset Optimized
+
+---
+
+# Keyboard Shortcuts
+
+Additional shortcuts:
+
+Ctrl + E → Export
+
+Ctrl + Shift + S → Save As
+
+Ctrl + D → Duplicate Project
+
+Ctrl + Shift + D → Duplicate Scene
+
+Ctrl + Shift + T → Save as Template
+
+Ctrl + R → Render Preview
+
+---
+
+# Settings
+
+Project Settings:
+
+Default Resolution
+
+Default FPS
+
+Default Export Format
+
+Autosave Interval
+
+Preview Quality
+
+GPU Rendering
+
+Theme
+
+Accent Color
+
+Language (future-ready)
+
+---
+
+# Error Handling
+
+If export fails:
+
+Display clear reason.
+
+Provide Retry.
+
+Save logs locally.
+
+Never corrupt project data.
+
+If assets are missing:
+
+Identify them.
+
+Allow relinking.
+
+---
+
+# Acceptance Criteria
+
+Base44 should deliver:
+
+* Professional Export Center
+* Export Queue
+* Rendering Pipeline
+* Export Presets
+* Batch Export
+* Scene Export
+* Image & GIF Export
+* Thumbnail Generator
+* Compression Profiles
+* Autosave
+* Crash Recovery
+* Local Project Storage
+* Project Browser
+* Template Library
+* Save as Template
+* Duplicate & Archive Projects
+* Version History
+* Asset Optimization
+* Lazy Loading
+* GPU Acceleration
+* Performance Settings
+* Notification System
+* Robust Error Handling
+
+---
+
+
+
+## MotionMock Studio – Product Requirements Document (PRD)
+
+# Part 7 – Technical Architecture, Application Structure, Component System & Development Standards
+
+---
+
+# Module Overview
+
+This section defines the internal architecture of MotionMock Studio. The application should be built as a scalable, modular, and maintainable codebase using modern frontend technologies. Every feature from Parts 1–6 should be implemented as independent, reusable modules.
+
+The goal is to produce a codebase that is easy to extend, test, and maintain while remaining fast and responsive.
+
+---
+
+# Technical Stack
+
+Use the following stack unless a better alternative is required for compatibility:
+
+### Frontend
+
+* React 19
+* TypeScript
+* Vite
+* Tailwind CSS
+* Framer Motion
+* GSAP
+* React Three Fiber
+* Three.js
+
+### State Management
+
+Use **Zustand** for global application state.
+
+Separate stores for:
+
+* Projects
+* Timeline
+* Assets
+* Export Queue
+* UI
+* Settings
+* History
+
+---
+
+### Data Storage
+
+Use:
+
+* IndexedDB (primary)
+* localStorage (preferences only)
+
+Never rely on external cloud services.
+
+---
+
+### Video Processing
+
+Use:
+
+* FFmpeg WebAssembly where supported
+* Browser MediaRecorder API
+* Canvas API
+* WebCodecs API (if available)
+
+---
+
+### Graphics
+
+Use:
+
+* HTML5 Canvas
+* WebGL
+* Three.js
+* React Three Fiber
+
+---
+
+# Folder Structure
+
+```
+src/
+
+app/
+
+components/
+
+features/
+
+assets/
+
+hooks/
+
+stores/
+
+services/
+
+utils/
+
+types/
+
+styles/
+
+workers/
+
+templates/
+
+icons/
+
+fonts/
+
+animations/
+
+effects/
+
+```
+
+---
+
+# Feature Modules
+
+Every feature lives in its own folder.
+
+Example:
+
+```
+features/
+
+recording/
+
+timeline/
+
+devices/
+
+camera/
+
+background/
+
+text/
+
+audio/
+
+export/
+
+templates/
+
+effects/
+
+projects/
+
+assets/
+
+settings/
+
+```
+
+Each module should contain:
+
+Components
+
+Hooks
+
+Store
+
+Services
+
+Types
+
+Utilities
+
+Styles
+
+---
+
+# Components
+
+All UI should be reusable.
+
+Examples:
+
+```
+Button
+
+IconButton
+
+Dropdown
+
+ContextMenu
+
+Modal
+
+Drawer
+
+Panel
+
+Sidebar
+
+Toolbar
+
+Tooltip
+
+Slider
+
+Switch
+
+Checkbox
+
+Radio
+
+Tabs
+
+Accordion
+
+Input
+
+ColorPicker
+
+GradientPicker
+
+MediaCard
+
+TimelineTrack
+
+TimelineClip
+
+SceneCard
+
+DeviceCard
+
+InspectorSection
+
+```
+
+---
+
+# Layout Components
+
+Create reusable layouts.
+
+```
+AppShell
+
+EditorLayout
+
+RecordingLayout
+
+ExportLayout
+
+ProjectLayout
+
+SplitPanel
+
+ResizablePanel
+
+DockPanel
+
+```
+
+---
+
+# Rendering Architecture
+
+Separate rendering from UI.
+
+Create:
+
+```
+RenderEngine
+
+CameraEngine
+
+AnimationEngine
+
+LightingEngine
+
+SceneRenderer
+
+VideoRenderer
+
+ExportRenderer
+
+```
+
+These modules should not depend on UI components.
+
+---
+
+# Timeline Engine
+
+Create an independent timeline engine.
+
+Responsible for:
+
+Playback
+
+Seeking
+
+Frame Calculation
+
+Keyframes
+
+Interpolation
+
+Looping
+
+Markers
+
+Transitions
+
+Undo/Redo
+
+---
+
+# Animation Engine
+
+Create reusable animation services.
+
+Support:
+
+Position
+
+Rotation
+
+Scale
+
+Opacity
+
+Blur
+
+Color
+
+Camera
+
+Light
+
+Masks
+
+Transitions
+
+---
+
+# Device Engine
+
+Each device should be an independent component.
+
+Responsibilities:
+
+Screen Rendering
+
+Reflection
+
+Frame
+
+Lighting
+
+Mask
+
+Shadow
+
+Replacement
+
+Interaction
+
+---
+
+# Recording Engine
+
+Implement as a dedicated service.
+
+Responsibilities:
+
+Screen Capture
+
+Webcam Capture
+
+Microphone Capture
+
+System Audio
+
+Countdown
+
+Permissions
+
+Recording Toolbar
+
+Saving
+
+Importing
+
+---
+
+# Screenshot Engine
+
+Responsibilities:
+
+Capture
+
+Crop
+
+Annotate
+
+Export
+
+Save
+
+Replace
+
+---
+
+# Audio Engine
+
+Responsibilities:
+
+Playback
+
+Recording
+
+Mixing
+
+Waveforms
+
+Volume
+
+Looping
+
+Effects
+
+---
+
+# Export Engine
+
+Responsibilities:
+
+Timeline Rendering
+
+Animation Rendering
+
+Encoding
+
+Audio Mixing
+
+Compression
+
+Progress
+
+Queue
+
+---
+
+# Services
+
+Create service layer.
+
+Examples:
+
+```
+AssetService
+
+ExportService
+
+RecordingService
+
+TimelineService
+
+ProjectService
+
+TemplateService
+
+DeviceService
+
+CameraService
+
+HistoryService
+
+StorageService
+
+NotificationService
+
+```
+
+---
+
+# Utilities
+
+Create reusable helpers.
+
+Examples:
+
+```
+Math
+
+Color
+
+Geometry
+
+Animation
+
+Timecode
+
+File
+
+Image
+
+Video
+
+Audio
+
+Compression
+
+Browser
+
+Canvas
+
+```
+
+---
+
+# Hooks
+
+Reusable React hooks.
+
+Examples:
+
+```
+useTimeline()
+
+useAnimation()
+
+useRecording()
+
+usePlayback()
+
+useCamera()
+
+useProject()
+
+useAssets()
+
+useExport()
+
+useUndo()
+
+useKeyboard()
+
+useDrag()
+
+useSelection()
+
+useHistory()
+
+```
+
+---
+
+# Workers
+
+Heavy operations should use Web Workers.
+
+Examples:
+
+Image Processing
+
+Thumbnail Generation
+
+Video Encoding
+
+Metadata Extraction
+
+Compression
+
+Waveform Generation
+
+---
+
+# State Stores
+
+Separate stores.
+
+```
+ProjectStore
+
+TimelineStore
+
+RecordingStore
+
+DeviceStore
+
+ExportStore
+
+AudioStore
+
+AssetStore
+
+HistoryStore
+
+UIStore
+
+SettingsStore
+
+```
+
+---
+
+# History System
+
+Create a command-based undo/redo system.
+
+Every action becomes a command.
+
+Examples:
+
+Move Object
+
+Delete
+
+Replace Asset
+
+Split Clip
+
+Trim
+
+Rotate
+
+Scale
+
+Animate
+
+Restore
+
+---
+
+# Event System
+
+Implement event bus.
+
+Events:
+
+Project Saved
+
+Recording Started
+
+Recording Finished
+
+Asset Imported
+
+Export Finished
+
+Scene Added
+
+Timeline Changed
+
+Animation Updated
+
+---
+
+# Performance Rules
+
+Never rerender entire application unnecessarily.
+
+Use:
+
+Memoization
+
+Virtual Lists
+
+Lazy Loading
+
+Suspense
+
+Dynamic Imports
+
+Debouncing
+
+Throttling
+
+Object Pooling where beneficial
+
+---
+
+# Error Boundaries
+
+Protect major sections.
+
+Recording
+
+Timeline
+
+Preview
+
+Assets
+
+Export
+
+Projects
+
+Display friendly recovery UI.
+
+---
+
+# Theme System
+
+Support:
+
+Dark Theme
+
+Light Theme
+
+System Theme
+
+Custom Accent Colors
+
+Future custom themes.
+
+---
+
+# Icon System
+
+Use consistent icon library.
+
+Every icon should be reusable.
+
+Support:
+
+Filled
+
+Outlined
+
+Rounded
+
+---
+
+# Typography System
+
+Create typography tokens.
+
+Display
+
+Heading
+
+Subheading
+
+Body
+
+Small
+
+Caption
+
+Label
+
+Button
+
+---
+
+# Design Tokens
+
+Centralize:
+
+Spacing
+
+Radius
+
+Shadows
+
+Colors
+
+Typography
+
+Animation Timing
+
+Borders
+
+Opacity
+
+Z-index
+
+---
+
+# Accessibility
+
+Support:
+
+Keyboard Navigation
+
+Focus Management
+
+Screen Reader Labels
+
+High Contrast
+
+Reduced Motion
+
+Scalable Fonts
+
+---
+
+# Internationalization
+
+Architecture should support localization.
+
+All UI strings stored separately.
+
+Avoid hardcoding text in components.
+
+---
+
+# Plugin Architecture (Future Ready)
+
+Design a plugin API.
+
+Possible plugins:
+
+New Devices
+
+New Export Formats
+
+Custom Animations
+
+Effects
+
+Templates
+
+Brand Packs
+
+Transitions
+
+---
+
+# Logging
+
+Provide development logging.
+
+Log:
+
+Rendering
+
+Exports
+
+Errors
+
+Performance
+
+Warnings
+
+Storage
+
+Recording
+
+Disable logs in production.
+
+---
+
+# Analytics (Local Only)
+
+Track locally:
+
+Render Time
+
+Export Time
+
+Frame Rate
+
+Memory Usage
+
+Project Size
+
+Asset Count
+
+Display inside a diagnostics panel.
+
+---
+
+# Diagnostics Panel
+
+Accessible from Settings.
+
+Display:
+
+Browser
+
+GPU
+
+Memory
+
+FPS
+
+Storage Usage
+
+IndexedDB Size
+
+Workers Running
+
+Project Statistics
+
+---
+
+# Testing Strategy
+
+Organize for:
+
+Unit Testing
+
+Component Testing
+
+Integration Testing
+
+End-to-End Testing
+
+Mock browser APIs where needed.
+
+---
+
+# Code Standards
+
+* TypeScript strict mode.
+* Functional React components.
+* Prefer composition over inheritance.
+* No duplicated logic.
+* Strong typing for all public APIs.
+* Modular architecture.
+* Clear naming conventions.
+* Self-documenting code.
+* Inline documentation for complex algorithms.
+
+---
+
+# Security
+
+Even though the app is local-first:
+
+* Validate imported files.
+* Prevent script injection through SVG or HTML content.
+* Sanitize filenames.
+* Handle browser permissions safely.
+* Never expose unnecessary browser APIs.
+
+---
+
+# Acceptance Criteria
+
+Base44 should deliver:
+
+* Modular React architecture
+* Reusable component library
+* Feature-based folder structure
+* Independent rendering engines
+* Zustand state management
+* IndexedDB persistence
+* Service layer
+* Utility layer
+* Web Worker support
+* Command-based undo/redo
+* Event bus
+* Theme system
+* Design tokens
+* Accessibility support
+* Localization-ready architecture
+* Plugin-ready architecture
+* Diagnostics panel
+* Development logging
+* Performance optimizations
+* Clean, maintainable codebase
+
+---
+
+## MotionMock Studio – Product Requirements Document (PRD)
+
+# Part 8 – Final Polish, UX, Onboarding, Quality Assurance, Production Readiness & Final Acceptance Criteria
+
+---
+
+# Module Overview
+
+This final module focuses on transforming MotionMock Studio from a functional application into a polished, production-quality product. The emphasis is on user experience, reliability, accessibility, onboarding, edge cases, and overall quality.
+
+Every interaction should feel deliberate, smooth, and professional.
+
+---
+
+# Product Philosophy
+
+MotionMock Studio should feel like a premium creative application.
+
+Every animation should be purposeful.
+
+Every interaction should be responsive.
+
+The application should reduce friction and help users create polished promotional videos quickly.
+
+---
+
+# User Experience Principles
+
+Follow these principles throughout the application:
+
+* Keep primary actions prominent.
+* Minimize unnecessary clicks.
+* Provide immediate visual feedback.
+* Never block the user without explanation.
+* Favor progressive disclosure over clutter.
+* Remember user preferences.
+* Make destructive actions reversible where possible.
+
+---
+
+# First Launch Experience
+
+When the application is opened for the first time:
+
+Display a welcome wizard.
+
+Steps:
+
+1. Welcome to MotionMock Studio
+2. Choose Theme (Dark / Light / System)
+3. Select Accent Color
+4. Set Default Export Resolution
+5. Choose Default FPS
+6. Configure Recording Preferences
+7. Enable Autosave
+8. Finish Setup
+
+Provide an option to skip and use recommended defaults.
+
+---
+
+# Interactive Onboarding
+
+Create a guided walkthrough highlighting:
+
+* Left Sidebar
+* Preview Canvas
+* Timeline
+* Properties Panel
+* Toolbar
+* Record Screen
+* Screenshot Capture
+* Device Library
+* Export Button
+
+Allow users to replay the tutorial later from the Help menu.
+
+---
+
+# Empty States
+
+Every empty view should provide clear guidance.
+
+Examples:
+
+No Projects → "Create your first project."
+
+No Assets → "Import media or record your screen."
+
+No Scenes → "Add a scene to begin."
+
+No Templates → "Create and save your first template."
+
+Include an illustration and a primary action button.
+
+---
+
+# Loading States
+
+Use skeleton loaders instead of blank areas.
+
+Examples:
+
+* Project cards
+* Asset thumbnails
+* Device library
+* Timeline
+* Export history
+
+Show progress indicators for long-running tasks.
+
+---
+
+# Notifications
+
+Implement a toast notification system.
+
+Types:
+
+* Success
+* Information
+* Warning
+* Error
+
+Notifications should:
+
+* Auto-dismiss after a few seconds (except critical errors)
+* Be accessible via keyboard
+* Not obstruct primary workflows
+
+---
+
+# Confirmation Dialogs
+
+Require confirmation for destructive actions such as:
+
+* Delete Project
+* Delete Asset
+* Clear Timeline
+* Remove Scene
+* Reset Preferences
+
+Where feasible, offer Undo instead of confirmation.
+
+---
+
+# Keyboard Shortcuts Reference
+
+Provide a searchable shortcut panel.
+
+Examples:
+
+* Ctrl/Cmd + N — New Project
+* Ctrl/Cmd + O — Open Project
+* Ctrl/Cmd + S — Save
+* Ctrl/Cmd + E — Export
+* Space — Play/Pause
+* Delete — Remove Selection
+* Ctrl/Cmd + Z — Undo
+* Ctrl/Cmd + Shift + Z — Redo
+
+Allow users to customize shortcuts in Settings.
+
+---
+
+# Help Center
+
+Include a Help section with:
+
+* Quick Start Guide
+* Keyboard Shortcuts
+* FAQ
+* Troubleshooting
+* Release Notes
+* About MotionMock Studio
+
+Keep documentation local to the application.
+
+---
+
+# Accessibility
+
+Ensure the application supports:
+
+* Full keyboard navigation
+* Visible focus states
+* Screen reader labels
+* High-contrast mode
+* Scalable text
+* Reduced motion preferences
+
+Do not rely on color alone to convey information.
+
+---
+
+# Error Handling
+
+Display friendly error messages with recovery options.
+
+Examples:
+
+* Screen capture permission denied
+* Camera unavailable
+* Microphone unavailable
+* Export failed
+* Unsupported file format
+* Storage full
+
+Offer actionable next steps whenever possible.
+
+---
+
+# Autosave & Recovery
+
+Continue autosaving in the background.
+
+On restart after an unexpected close:
+
+* Detect recoverable projects
+* Offer restore options
+* Show timestamp of last autosave
+
+Do not overwrite the last good version until recovery is complete.
+
+---
+
+# Performance Monitoring
+
+Provide an optional diagnostics overlay displaying:
+
+* Current FPS
+* Memory usage
+* Active workers
+* Asset count
+* Timeline complexity
+
+Hide by default.
+
+---
+
+# Preferences
+
+Allow users to configure:
+
+Appearance
+
+* Theme
+* Accent Color
+* UI Scale
+
+Editing
+
+* Autosave Interval
+* Snapping
+* Default Transition
+* Default Animation Duration
+
+Recording
+
+* Countdown
+* Cursor Capture
+* Microphone
+* Webcam
+* Audio
+
+Playback
+
+* Preview Quality
+* Loop Playback
+* Audio Scrubbing
+
+Export
+
+* Default Format
+* Default Resolution
+* Compression
+
+---
+
+# Localization Readiness
+
+All user-facing strings should be externalized for future localization.
+
+Support right-to-left layouts where practical.
+
+---
+
+# Privacy
+
+MotionMock Studio is a local-first application.
+
+User projects remain on the user's device unless they explicitly export or share them.
+
+Do not transmit project data to external services without user consent.
+
+---
+
+# Future Expansion Points
+
+Design the application so it can later support optional modules such as:
+
+* Cloud sync
+* Team collaboration
+* Additional device packs
+* Community template marketplace
+* AI-assisted caption generation
+* AI-assisted background removal
+* Plugin ecosystem
+
+These features should not be implemented now but the architecture should accommodate them.
+
+---
+
+# Quality Assurance Checklist
+
+Before release, verify:
+
+* Projects can be created, saved, reopened, duplicated, and deleted.
+* Screen recording functions correctly with supported browsers.
+* Screenshot capture works across supported capture modes.
+* Device mockups correctly display images and videos.
+* Animations preview smoothly.
+* Timeline edits are frame-accurate.
+* Exports complete successfully in all supported formats.
+* Autosave and recovery behave reliably.
+* Keyboard shortcuts function consistently.
+* Accessibility checks pass.
+* No critical console errors remain.
+
+---
+
+# Browser Support
+
+Target modern evergreen browsers.
+
+Gracefully inform users when a required browser capability (such as Screen Capture or WebCodecs) is unavailable.
+
+---
+
+# Release Readiness
+
+The application is considered ready when:
+
+* All acceptance criteria from Parts 1–7 are met.
+* Core workflows are stable.
+* Performance remains responsive with typical projects.
+* Error handling is robust.
+* UI is visually consistent.
+* Documentation is complete.
+
+---
+
+# Final Acceptance Criteria
+
+MotionMock Studio should provide a complete end-to-end workflow:
+
+1. Create or open a project.
+2. Record the screen or capture screenshots.
+3. Import additional media.
+4. Build scenes with customizable device mockups.
+5. Arrange scenes on a timeline.
+6. Animate devices, text, camera, and effects.
+7. Add branding, audio, and visual enhancements.
+8. Preview the project in real time.
+9. Save projects locally with autosave and recovery.
+10. Export professional promotional videos in multiple formats.
+
+The application should be intuitive for new users while providing sufficient depth for experienced creators.
+
+---
+
+
+
+
